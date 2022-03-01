@@ -35,7 +35,7 @@ void write2d_pooints(){
 
 vector<string> stringSplitter(string s){
   
-  //Separate a given string using space 
+
   vector<string> res;
   istringstream iss(s);
   for(string s; iss >> s; )
@@ -47,6 +47,9 @@ vector<string> stringSplitter(string s){
 
 vector<point> read2dpoints(string filename){
   // Reads 2D points from a file.
+  // filename : the file name.
+  // return : a vector of 2D points.
+
 
     ifstream fstream; // input file stream.
     point p; // point struct.
@@ -68,11 +71,15 @@ vector<point> read2dpoints(string filename){
 }
 
 float measure_euclidean_distance(point p1, point p2){
- //  Measures the distance between two points.
+  //  Measures the distance between two points.
+  //  p1 : the first point.
+  //  p2 : the second point.
   return sqrt(pow((p1.x - p2.x), 2) + pow((p1.y - p2.y), 2));
 }
 
 float measure_euclidean_distance_without_square_root(point p1, point p2){
- //  Measures the distance between two points without square root.
+  //  Measures the distance between two points without square root.
+  //  p1 : the first point.
+  //  p2 : the second point.
   return pow((p1.x - p2.x), 2) + pow((p1.y - p2.y), 2);
 }

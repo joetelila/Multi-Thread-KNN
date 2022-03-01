@@ -2,24 +2,15 @@
 // Date : 17/02/2022 [my BD]
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
 //        patterns using only C++ STL.
-
-
 // include necessary libraries.
 #include <iostream>
 #include "src/utils.h"
+#include "src/implementations.h"
 using namespace std;
-
-
-//def knn_sequential(int datapoints, int datapoint, int k){
-
- // code here.
-
-//}
-
 
 int main(int argc, char const *argv[]) {
 
-  int  k = 5;
+  int  k = 7;
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
 
@@ -27,7 +18,11 @@ int main(int argc, char const *argv[]) {
   string filename = "points.txt";
 
   points = read2dpoints(filename);
-  //knn_seq_results=knn_seq_compute(points, k);
+  stl_knn_sequential(points, k);
+  
+  //stl_knn_par(points, k);
+  //ff_knn_par(points, k);
+  
   return 0;
 }
 
