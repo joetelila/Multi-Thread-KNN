@@ -15,6 +15,12 @@ struct kresult{
   float distance;
 };
 
+struct interval{
+    // a struct for storing the range of points.
+  int start;
+  int end;
+};
+
 class cmpFunction{
     // compare function for priority queue.
  public:
@@ -24,7 +30,7 @@ class cmpFunction{
    }
 };
 
-string get_knn(vector<point> points, int i, int k){
+string get_knn_par(vector<point> points, int i, int k){
     // return k nearest neighbors of point i.
     // points : the 2d points.
     // i : the point of interest.
@@ -56,22 +62,18 @@ string get_knn(vector<point> points, int i, int k){
     return knn;
 }
 
-void stl_knn_sequential(vector<point> points, int k){
+string knn_par_stl(vector<point> points, interval range, int k){
     // Calculate k nearest neighbors of each point sequentially.
     // points : the 2d points.
     // k : the number of neighbors.
     // return : nothing.
   string result = "";
-  for(int i=0;i<points.size();i++){
-       result = get_knn(points, i, k);
-       cout<<i<<": "<<result<<endl;
+  string res;
+  for(int i=range.start;i<range.end;i++){
+       res = get_knn_par(points, i, k);
+       result+= to_string(i)+": "+ res;
+       result+="\n";
   }
+  return result;
 }
 
-void stl_knn_par(vector<point> points, int k){
- cout<<"KNN Parallel: "<<k<< endl;
-}
-
-void ff_knn_par(vector<point> points, int k){
- cout<<"FF KNN Parallel: "<<k<< endl;
-}

@@ -16,6 +16,13 @@ struct point{
   double y;
 };
 
+struct range{
+    // a struct for storing the range of points.
+  int start;
+  int end;
+};
+
+
 /*
 bool checkfor_error(){
   // code here.
@@ -34,27 +41,24 @@ void write2d_pooints(){
 } */
 
 vector<string> stringSplitter(string s){
-  
 
   vector<string> res;
   istringstream iss(s);
   for(string s; iss >> s; )
       res.push_back(s);
-  
   return res;
 }
 
 
-vector<point> read2dpoints(string filename){
+vector<point> read2dpoints(string filepath){
   // Reads 2D points from a file.
   // filename : the file name.
   // return : a vector of 2D points.
 
-
     ifstream fstream; // input file stream.
     point p; // point struct.
     vector<point> points; // stores the 2D points.
-    fstream.open(filename);
+    fstream.open(filepath);
     
     if(fstream.is_open()){
         string line;
