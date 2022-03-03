@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 
-  int  k = 5; // k value.
+  int  k = 4; // k value.
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
   string knn_seq_results = "";      // what will store the sequential result.
@@ -22,17 +22,17 @@ int main(int argc, char const *argv[]) {
 
   string filepath = "data/input_medium.txt";
   
-  points = read2dpoints(filepath);
+  points = read2dpoints(filepath);  
   
   // Computing knn in sequantial.
   {
-    utimer t_seq("Sequential KNN");
+    // utimer t_seq("Sequential KNN");
     // sequential knn 
-    knn_seq_results = stl_knn_sequential(points, k);
+   // knn_seq_results = stl_knn_sequential(points, k);
   }
 
     // parallel knn 
-    int nw = 10;
+    int nw = 4;
     vector<thread> threads;
     vector<interval> ranges(nw);
     int delta = points.size() / nw;
@@ -40,8 +40,8 @@ int main(int argc, char const *argv[]) {
     string results[nw];
 
     auto compute_chunk = [&results](vector<point> points, interval range, int k, int i) {   // function to compute a chunk
-     cout<<"Thread "<<i<<": Range: "<<range.start<<" "<<range.end<<endl;
-     knn_par_stl(points, range, k);
+    //  cout<<"Thread "<<i<<": Range: "<<range.start<<" "<<range.end<<endl;
+     results[i] = knn_par_stl(points, range, k);
     };
     
     {
@@ -55,7 +55,8 @@ int main(int argc, char const *argv[]) {
     
     // let threads start, assigning them a function and an amount of work
     for(int i=0; i<nw; i++){
-        threads.push_back(thread(compute_chunk, points, ranges[i], k, i));
+       // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
+      threads.push_back(thread(compute_chunk, points, ranges[i], k, i));
     }
        
     // await thread termination
