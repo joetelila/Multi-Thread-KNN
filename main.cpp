@@ -39,7 +39,7 @@ int main(int argc, char const *argv[]) {
     int delta = points.size() / nw;
     
     string results[nw];
-    cout<<"[NW] = "<<nw<<endl;
+   // cout<<"[NW] = "<<nw<<endl;
 
    {
       utimer t_seq("Paralle KNN: ");
@@ -73,7 +73,7 @@ int main(int argc, char const *argv[]) {
     
   }
 
-  cout<<"All threads finished"<<endl;
+  //cout<<"All threads finished"<<endl;
   // join the results
   for(int i=0; i<nw; i++){
     knn_par_results += results[i];
