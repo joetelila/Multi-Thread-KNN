@@ -1,0 +1,42 @@
+# building the docker file. The '.' indicates to look the docker file in the current directory.
+# -t is for the tag of docker container.
+sudo docker build -t joet .
+# connecting to a docker container.
+docker run -it marcod/ae2020 bash    # -it stands for interactively opening the bash
+
+# creating a new file.
+touch main.py # creating a file
+
+# exiting from the docker container
+exit 
+
+# connectin with local file.
+docker run -v "/Users/JoeKifle/Documents/EDU/Pisa_2020_2021/Semester_2/spm/PDS_testcode/2022:/home/spm2021user/SPM_code" -it joetspm
+
+# connectin to the remote machine
+ssh y.telila@131.114.50.227
+
+# copying file to the server
+rsync -avzh --stats PDS_testcode/ y.telila@131.114.50.227:/home/y.telila/PDS_testcode/
+
+
+# compiling your code
+g++ -o code code.cpp # -o flag is the output name of your compiled output.
+
+# linking library when compiling.
+g++ code.cpp -lpthread
+
+# flags when compiling.
+-o # output of the compiling code.
+-O3 # sets optimization level Eg. fastflow need highest optimization level.
+
+# your reference should be https://en.cppreference.com/w/
+
+
+# MEASURING TIME
+# you can use the time command to measure the time. But this measures the whole
+# time it takes for the code to execure. Including the time it took for the code
+# to fetch, load and execute the code.
+# Includes the time spent on loading the code, start the code, end the code.
+$ time ./a.out # Gives you the time in msec, which is not good always. because we want our measure to be more accurate than msec.
+

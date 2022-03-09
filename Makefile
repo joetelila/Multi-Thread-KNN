@@ -1,11 +1,3 @@
-
-CXX			= g++ -std=c++17 
-INCLUDES	= -I $(FF_ROOT) 
-CXXFLAGS  	= -g # -DBLOCKING_MODE -DFF_BOUNDED_BUFFER
-
-LDFLAGS 	= -pthread
-OPTFLAGS	= -O3 -finline-functions -w -DNDEBUG
-
 output: main.o stl_knn_par.o stl_knn_seq.o utils.o
 	g++ main.o stl_knn_par.o stl_knn_seq.o utils.o -pthread -o  output
 main.o: main.cpp
@@ -21,3 +13,4 @@ utimer.o: src/utimer.cpp
 
 clean:
 	rm *.o output
+	rm *.out

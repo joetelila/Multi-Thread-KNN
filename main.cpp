@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 
-  int  k = 4; // k value.
+  int  k = 5; // k value.
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
   string knn_seq_results = "";      // what will store the sequential result.
@@ -32,21 +32,23 @@ int main(int argc, char const *argv[]) {
   }
 
     // parallel knn 
-    int nw = 4;
+    int nw = atoi(argv[1]); 
+
     vector<thread> threads;
     vector<interval> ranges(nw);
     int delta = points.size() / nw;
     
     string results[nw];
+    cout<<"[NW] = "<<nw<<endl;
+
+   {
+      utimer t_seq("Paralle KNN: ");
 
     auto compute_chunk = [&results](vector<point> points, interval range, int k, int i) {   // function to compute a chunk
-    //  cout<<"Thread "<<i<<": Range: "<<range.start<<" "<<range.end<<endl;
-     results[i] = knn_par_stl(points, range, k);
+    //cout<<"Thread "<<i<<": Range: "<<range.start<<" "<<range.end<<endl;
+     knn_par_stl(points, range, k);
     };
     
-    {
-      utimer t_seq("Paralle KNN: ");
-   
     // split the points into nw ranges.
     for(int i=0; i<nw; i++){
         ranges[i].start = i*delta;
@@ -55,8 +57,13 @@ int main(int argc, char const *argv[]) {
     
     // let threads start, assigning them a function and an amount of work
     for(int i=0; i<nw; i++){
-       // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
-      threads.push_back(thread(compute_chunk, points, ranges[i], k, i));
+      // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
+      if(true){
+         threads.push_back(thread(compute_chunk, points, ranges[i], k, i));
+      }else
+      continue;
+     
+      
     }
        
     // await thread termination
@@ -64,14 +71,14 @@ int main(int argc, char const *argv[]) {
       t.join();
     } 
     
-    }
+  }
 
-    cout<<"All threads finished"<<endl;
-    // join the results
-    for(int i=0; i<nw; i++){
-      knn_par_results += results[i];
-    }
-    // cout<<knn_par_results<<endl;
+  cout<<"All threads finished"<<endl;
+  // join the results
+  for(int i=0; i<nw; i++){
+    knn_par_results += results[i];
+  }
+ // cout<<knn_par_results<<endl;
 
   return 0;
 }
