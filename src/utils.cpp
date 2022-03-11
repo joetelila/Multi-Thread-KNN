@@ -58,7 +58,12 @@ vector<point> read2dpoints(string filepath){
     ifstream fstream; // input file stream.
     point p; // point struct.
     vector<point> points; // stores the 2D points.
+    
     fstream.open(filepath);
+    // after open, check f and throw std::system_error with the errno
+    if (!fstream)
+        throw std::system_error(errno, std::system_category(), "failed to open "+filepath);
+
     
     if(fstream.is_open()){
         string line;

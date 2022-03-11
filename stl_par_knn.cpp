@@ -1,7 +1,6 @@
 /*
   STL C++ implementation of parallel KNN
 */
-
 // Author : Yohannis Kifle Telila.
 // Date : 17/02/2022 [my BD]
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
@@ -18,24 +17,22 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 
-  if (argc<3) {
-        cerr << "use: " << argv[0]  << " nworkers k-value -d [optional -d flag to output only nw, k and running time]\n";
+  if (argc<4) {
+        cerr << "use: " << argv[0]  << " nworkers k-value input_file_path -d [optional -d flag to output only nw, k and running time]\n";
         return -1;
     }
   
   // parallel knn 
   int nw = atoi(argv[1]); 
   int  k = atoi(argv[2]); // k value.
-  
+  string filepath = argv[3]; // input file path.];  
   string d = "";
-  if(argv[3] != NULL){
-    d = string(argv[3]);
+  if(argv[4] != NULL){
+    d = string(argv[4]);
   }
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
   string knn_par_results = "";      // what will store the parallel result.
-
-  string filepath = "data/input_medium.txt";
   
   points = read2dpoints(filepath);  
     
@@ -58,7 +55,7 @@ int main(int argc, char const *argv[]) {
     for(int i=0; i<nw; i++){
         ranges[i].start = i*delta;
         ranges[i].end = (i != (nw-1) ? (i+1)*delta : points.size());
-      }
+    }
     
     // let threads start, assigning them a function and an amount of work
     for(int i=0; i<nw; i++){
@@ -79,7 +76,6 @@ int main(int argc, char const *argv[]) {
     knn_par_results += results[i];
   }
 
-
   if (string(d)=="-d"){
       cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<par_time<<"\n";
   }else{
@@ -87,9 +83,9 @@ int main(int argc, char const *argv[]) {
     ofstream stl_par_writer("results/stl_par_res.txt");
     stl_par_writer << knn_par_results;
     stl_par_writer.close();
+    cout<<"STL par, Finished in "<<par_time<<" ms.\n";
     cout<<"Result has been written to results/stl_par_res.txt"<<endl;
   }
 
   return 0;
 }
-

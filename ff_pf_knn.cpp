@@ -26,25 +26,24 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 
-  if (argc<3) {
-        cerr << "use: " << argv[0]  << " nworkers k-value -d [optional -d flag to output only nw, k and running time]\n";
+  if (argc<4) {
+        cerr << "use: " << argv[0]  << " nworkers k-value input_file_path -d [optional -d flag to output only nw, k and running time]\n";
         return -1;
     }
 
   int nw = atoi(argv[1]); 
   int  k = atoi(argv[2]); // k value.
-  
+  string filepath = argv[3]; // input file path.];
   // for debugging purposes.
   string d = "";
-  if(argv[3] != NULL){
-    d = string(argv[3]);
+  if(argv[4] != NULL){
+    d = string(argv[4]);
   }
 
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
   string ff_par_results = "";      // what will store the parallel result.
 
-  string filepath = "data/input_medium.txt";
   long  ff_par_time; // for later speedup print
   points = read2dpoints(filepath);  
   
@@ -79,6 +78,7 @@ int main(int argc, char const *argv[]) {
     ofstream ff_res_writer("results/ff_par_res.txt");
     ff_res_writer << ff_par_results;
     ff_res_writer.close();
+    cout<<"FF Parallel for reduce, Finished in "<<ff_par_time<<" ms.\n";
     cout<<"Result has been written to results/ff_par_res.txt"<<endl;
   }
 
