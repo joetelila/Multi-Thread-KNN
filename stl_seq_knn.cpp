@@ -1,7 +1,6 @@
 /*
   C++ STL implementation of sequential knn.
 */
-
 // Author : Yohannis Kifle Telila.
 // Date : 17/02/2022 [my BD]
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
@@ -28,7 +27,6 @@ int main(int argc, char const *argv[]) {
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
   string knn_seq_results = "";      // what will store the sequential result.
-  string knn_par_results = "";      // what will store the parallel result.
 
   string filepath = "data/input_medium.txt";
   
@@ -36,7 +34,7 @@ int main(int argc, char const *argv[]) {
   
   // Computing knn in sequantial.
   {
-     utimer t_seq("Sequential KNN");
+     utimer t_seq("STL Sequential KNN");
     // sequential knn 
     knn_seq_results = stl_knn_sequential(points, k);
   }

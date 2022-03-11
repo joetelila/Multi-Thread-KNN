@@ -29,20 +29,18 @@ int main(int argc, char const *argv[]) {
 
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
-  string knn_seq_results = "";      // what will store the sequential result.
   string knn_par_results = "";      // what will store the parallel result.
 
   string filepath = "data/input_medium.txt";
   
   points = read2dpoints(filepath);  
     
-    vector<thread> threads;
-    vector<interval> ranges(nw);
-    int delta = points.size() / nw;
-    
-    string results[nw];
-   // cout<<"[NW] = "<<nw<<endl;
-
+  vector<thread> threads;
+  vector<interval> ranges(nw);
+  int delta = points.size() / nw;
+  
+  string results[nw];
+  
    {
       utimer t_seq("Paralle KNN: ");
 
