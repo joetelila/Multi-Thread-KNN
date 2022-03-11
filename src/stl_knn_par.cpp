@@ -64,7 +64,7 @@ string get_knn_par(vector<point> points, int i, int k){
 
 string knn_par_stl(vector<point> points, interval range, int k){
     // Calculate k nearest neighbors of each point sequentially.
-    // points : the 2d points.
+    // points : the 2D points.
     // k : the number of neighbors.
     // return : nothing.
   string result = "";

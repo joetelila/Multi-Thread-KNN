@@ -1,3 +1,7 @@
+/*
+  STL C++ implementation of parallel KNN
+*/
+
 // Author : Yohannis Kifle Telila.
 // Date : 17/02/2022 [my BD]
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
@@ -14,7 +18,15 @@ using namespace std;
 
 int main(int argc, char const *argv[]) {
 
-  int  k = 5; // k value.
+  if (argc<3) {
+        std::cerr << "use: " << argv[0]  << "nworkers k-value\n";
+        return -1;
+    }
+  
+  // parallel knn 
+  int nw = atoi(argv[1]); 
+  int  k = atoi(argv[2]); // k value.
+
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
   string knn_seq_results = "";      // what will store the sequential result.
@@ -23,17 +35,7 @@ int main(int argc, char const *argv[]) {
   string filepath = "data/input_medium.txt";
   
   points = read2dpoints(filepath);  
-  
-  // Computing knn in sequantial.
-  {
-    // utimer t_seq("Sequential KNN");
-    // sequential knn 
-   // knn_seq_results = stl_knn_sequential(points, k);
-  }
-
-    // parallel knn 
-    int nw = atoi(argv[1]); 
-
+    
     vector<thread> threads;
     vector<interval> ranges(nw);
     int delta = points.size() / nw;
@@ -46,7 +48,7 @@ int main(int argc, char const *argv[]) {
 
     auto compute_chunk = [&results](vector<point> points, interval range, int k, int i) {   // function to compute a chunk
     //cout<<"Thread "<<i<<": Range: "<<range.start<<" "<<range.end<<endl;
-     knn_par_stl(points, range, k);
+    results[i] = knn_par_stl(points, range, k);
     };
     
     // split the points into nw ranges.
@@ -62,24 +64,22 @@ int main(int argc, char const *argv[]) {
          threads.push_back(thread(compute_chunk, points, ranges[i], k, i));
       }else
       continue;
-     
-      
-    }
-       
+   }  
     // await thread termination
     for(thread& t: threads) {                       
       t.join();
-    } 
-    
-  }
-
+     } 
+   }
   //cout<<"All threads finished"<<endl;
   // join the results
   for(int i=0; i<nw; i++){
     knn_par_results += results[i];
   }
- // cout<<knn_par_results<<endl;
-
+  // writing the results to a file.
+  ofstream stl_par_writer("results/stl_par_res.txt");
+  stl_par_writer << knn_par_results;
+  stl_par_writer.close();
+  cout<<"Result has been written to results/stl_par_res.txt"<<endl;
   return 0;
 }
 
