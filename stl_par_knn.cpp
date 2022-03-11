@@ -19,14 +19,18 @@ using namespace std;
 int main(int argc, char const *argv[]) {
 
   if (argc<3) {
-        std::cerr << "use: " << argv[0]  << "nworkers k-value\n";
+        cerr << "use: " << argv[0]  << " nworkers k-value -d [optional -d flag to output only nw, k and running time]\n";
         return -1;
     }
   
   // parallel knn 
   int nw = atoi(argv[1]); 
   int  k = atoi(argv[2]); // k value.
-
+  
+  string d = "";
+  if(argv[3] != NULL){
+    d = string(argv[3]);
+  }
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
   string knn_par_results = "";      // what will store the parallel result.
@@ -41,8 +45,9 @@ int main(int argc, char const *argv[]) {
   
   string results[nw];
   
+  long par_time;
    {
-      utimer t_seq("Paralle KNN: ");
+      utimer t_seq("STL Paralle KNN: ", &par_time);
 
     auto compute_chunk = [&results](vector<point> points, interval range, int k, int i) {   // function to compute a chunk
     //cout<<"Thread "<<i<<": Range: "<<range.start<<" "<<range.end<<endl;
@@ -73,11 +78,18 @@ int main(int argc, char const *argv[]) {
   for(int i=0; i<nw; i++){
     knn_par_results += results[i];
   }
-  // writing the results to a file.
-  ofstream stl_par_writer("results/stl_par_res.txt");
-  stl_par_writer << knn_par_results;
-  stl_par_writer.close();
-  cout<<"Result has been written to results/stl_par_res.txt"<<endl;
+
+
+  if (string(d)=="-d"){
+      cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<par_time<<"\n";
+  }else{
+      // writing the results to a file.
+    ofstream stl_par_writer("results/stl_par_res.txt");
+    stl_par_writer << knn_par_results;
+    stl_par_writer.close();
+    cout<<"Result has been written to results/stl_par_res.txt"<<endl;
+  }
+
   return 0;
 }
 
