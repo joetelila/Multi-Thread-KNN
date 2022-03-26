@@ -23,24 +23,31 @@ int main(int argc, char const *argv[]) {
     }
   
   // parallel knn 
-  int nw = atoi(argv[1]); 
-  int  k = atoi(argv[2]); // k value.
+  int nw = atoi(argv[1]);  // number of workers
+  int  k = atoi(argv[2]); // k(neighbor) value.
   string filepath = argv[3]; // input file path.];  
-  string d = "";
+  string d = ""; // output flag.0
   if(argv[4] != NULL){
     d = string(argv[4]);
   }
+  // checking for k value.
+  if (k < 1){
+    cerr << "k must be greater than or equal to 1\n";
+    return -1;
+  }
+
   // where the points are going to be stored [the one read from]
-  vector<point> points; // where 2d points are stored
+  vector<point> points; // where 2d points are stored after reading from file.
   string knn_par_results = "";      // what will store the parallel result.
   
+  // Read the file and store the points in the vector.
   points = read2dpoints(filepath);  
     
-  vector<thread> threads;
-  vector<interval> ranges(nw);
-  int delta = points.size() / nw;
+  vector<thread> threads; // where the threads are going to be stored.
+  vector<interval> ranges(nw); // where the ranges are going to be stored.
+  int delta = points.size() / nw; // the delta for each thread.
   
-  string results[nw];
+  string results[nw]; // the results of each thread.
   
   long par_time;
    {
@@ -53,21 +60,18 @@ int main(int argc, char const *argv[]) {
     
     // split the points into nw ranges.
     for(int i=0; i<nw; i++){
-        ranges[i].start = i*delta;
-        ranges[i].end = (i != (nw-1) ? (i+1)*delta : points.size());
+        ranges[i].start = i*delta; // start of the range.
+        ranges[i].end = (i != (nw-1) ? (i+1)*delta : points.size()); // end of the range.
     }
     
     // let threads start, assigning them a function and an amount of work
-    for(int i=0; i<nw; i++){
+    for(int i=0; i<nw; i++)
+      threads.push_back(thread(compute_chunk, points, ranges[i], k, i));
       // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
-      if(true){
-         threads.push_back(thread(compute_chunk, points, ranges[i], k, i));
-      }else
-      continue;
-   }  
-    // await thread termination
+      
+      // await thread termination
     for(thread& t: threads) {                       
-      t.join();
+      t.join(); // wait for thread to finish
      } 
    }
   //cout<<"All threads finished"<<endl;
@@ -76,6 +80,7 @@ int main(int argc, char const *argv[]) {
     knn_par_results += results[i];
   }
 
+  // output the results.
   if (string(d)=="-d"){
       cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<par_time<<"\n";
   }else{

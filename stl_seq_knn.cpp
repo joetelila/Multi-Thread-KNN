@@ -5,22 +5,22 @@
 // Date : 17/02/2022 [my BD]
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
 //        patterns using only C++ STL.
-// include necessary libraries.
 
+
+// include necessary libraries.
 #include <iostream>
 #include <thread>
 #include <cstring>
 #include "src/utimer.cpp"
 #include "src/utils.h"
 #include "src/stl_knn_seq.h"
-#include "src/stl_knn_par.h"
 using namespace std;
 
 
 int main(int argc, char const *argv[]) {
-  if (argc<3) {
-        cerr << "use: " << argv[0]  << " k-value input_file_path -d [optional -d flag to output only nw and running time]\n";
-        return -1;
+  if (argc < 3) {
+    cerr << "use: " << argv[0]  << " k-value input_file_path -d [optional -d flag to output only nw and running time]\n";
+    return -1;
   }
 
   int  k = atoi(argv[1]); // k value.

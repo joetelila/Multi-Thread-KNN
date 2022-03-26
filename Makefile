@@ -34,7 +34,7 @@ CXX		= g++ -std=c++17
 INCLUDES	= -I $(FF_ROOT) 
 CXXFLAGS  	= -g # -DNO_DEFAULT_MAPPING -DBLOCKING_MODE -DFF_BOUNDED_BUFFER
 
-LDFLAGS 	= -pthread
+LDFLAGS 	= -pthread -fopenmp
 OPTFLAGS	= -O3 -finline-functions -DNDEBUG src/utils.cpp src/stl_knn_seq.cpp src/stl_knn_par.cpp
 
 SOURCES         = $(wildcard *.cpp)

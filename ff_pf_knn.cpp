@@ -82,7 +82,6 @@ int main(int argc, char const *argv[]) {
     cout<<"Result has been written to results/ff_par_res.txt"<<endl;
   }
 
-
   return 0;
 }
 
