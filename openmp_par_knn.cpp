@@ -70,7 +70,7 @@ int main(int argc, char const *argv[]) {
   // writing the results to a file.
   // Note : if you use -d, it wont write the results to a file.
   if (string(d)=="-d"){
-      cout<<"[k]: "<<k<<"  [time]: "<<openmp_time<<"\n";
+      cout<<"[nw]: "<<nw<<" [k]: "<<k<<" [time]: "<<openmp_time<<"\n";
   }else{
       ofstream openMp_res_writer("results/openMp_par_res.txt");
       openMp_res_writer << finalResult;
