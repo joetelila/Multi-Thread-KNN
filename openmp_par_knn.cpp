@@ -40,24 +40,21 @@ int main(int argc, char const *argv[]) {
   
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
-  vector<string> results(nw);    // what will store the sequential result.
+  vector<string> results(nw);    // what will store the result.
   points = read2dpoints(filepath);  
-  string res = "";
   int point_size  = points.size();
+  string res = "";
   long openmp_time;
   // Computing knn in sequantial.
   {
      utimer t_seq("openMp Parallel KNN", &openmp_time);
     
-    #pragma omp parallel num_threads(nw) shared(points, point_size, k)
+    #pragma omp parallel num_threads(nw) shared(points, point_size, k) private(res)
     {
         #pragma omp for schedule(static)
         for(int i=0;i<point_size;i++){
-       
         res = get_knn(points, i, k);
-        
         int id = omp_get_thread_num();
-        //cout<<"Thread id: "<<id<<" i: "<<i<<" res: "<<res<<endl;
         results[id] += (to_string(i)+": "+ res+"\n");
        }
     } // end of omp parallel num_thread
