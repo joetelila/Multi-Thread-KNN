@@ -44,7 +44,6 @@ int main(int argc, char const *argv[]) {
     // sequential knn 
     knn_seq_results = stl_knn_sequential(points, k);
   }
-
   // writing the results to a file.
   // Note : if you use -d, it wont write the results to a file.
   if (string(d)=="-d"){
