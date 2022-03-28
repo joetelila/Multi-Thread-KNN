@@ -28,17 +28,7 @@ bool checkfor_error(){
   // code here.
 }
 
-bool checking_for_successful_parameter_provide(){
-
- // code here.
-
-}
-
-void write2d_pooints(){
-
- // code here.
-
-} */
+*/
 
 vector<string> stringSplitter(string s){
 
@@ -71,7 +61,7 @@ vector<point> read2dpoints(string filepath){
         while(getline(fstream,line)){
           res = stringSplitter(line);
           p.x = stod(res[0]);
-          p.y = stod(res[1]);
+          p.y = stod(res[2]);
           points.push_back(p);
          // cout<<res[0]<<" "<<res[1]<<endl;
       }}

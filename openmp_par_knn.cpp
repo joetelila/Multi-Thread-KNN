@@ -15,8 +15,8 @@
 #include "src/utimer.cpp"
 #include "src/utils.h"
 #include "src/stl_knn_seq.h"
-using namespace std;
 
+using namespace std;
 
 int main(int argc, char const *argv[]) {
   if (argc<4) {
@@ -69,7 +69,7 @@ int main(int argc, char const *argv[]) {
 
   // writing the results to a file.
   // Note : if you use -d, it wont write the results to a file.
-  if (string(d)=="-d"){
+  if (string(d)=="-d"){   
       cout<<"[nw]: "<<nw<<" [k]: "<<k<<" [time]: "<<openmp_time<<"\n";
   }else{
       ofstream openMp_res_writer("results/openMp_par_res.txt");
