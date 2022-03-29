@@ -1,55 +1,37 @@
 #!/bin/bash
 # Shell script to execute the test
 allThreads=(1 2 4 8 16 32 64 128 256)
-inputFiles=("input_10k_s100.txt" "input_50k_s200.txt" "input_100k_s300.txt")
-totalRuns=10
+inputFiles=("input_10k_s100.txt" "input_50k_s200.txt" "input_100k_s300.txt") 
+totalRuns=6
 # Running sequential version
 #----------------------------------------------------------------------------------------------------------------------
 echo "---------------Running sequential version---------------"
 for inputFile in ${inputFiles[@]}
 do
-seq_time_sum=0
-for ((n=0;n<totalRuns;n++))
-do
-    runtime=$(./stl_seq_knn 10 data/$inputFile -d | awk '{print $4}') 
-    seq_time_sum=`expr $seq_time_sum + $runtime`
+  for ((i=0;i<$totalRuns; i++)); do ./stl_seq_knn 10 data/$inputFile -d ; done |  awk '{sum+=$4} END {printf "[STL Sequence]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]";
 done
-seq_time_avg=`expr $seq_time_sum / $totalRuns`
-echo "[STL CPP Sequential], [$inputFile], [$totalRuns runs]: $seq_time_avg"
-done
+
 
 # Running parallel version
 echo "---------------Running STL CPP parallel version---------------"
-#echo "Running parallel version"
 for inputFile in ${inputFiles[@]}
 do
-par_time_sum=0
 for nw in ${allThreads[@]}
 do  
-    for ((i=0;i<totalRuns;i++))
-    do
-        runtime=$(./stl_par_knn $nw 10 data/$inputFile -d | awk '{print $6}') 
-        par_time_sum=`expr $par_time_sum + $runtime`
+     for ((i=0;i<$totalRuns; i++)); do ./stl_par_knn $nw 10 data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[STL Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
     done
-     echo "[STL CPP Parallel] , [$inputFile],[$nw threads] [$totalRuns runs] : `expr $par_time_sum / $totalRuns`"
-done
+    echo " "
 done
 
 # Running parallel version
 echo "---------------Running FF parallel for version---------------"
-#echo "Running parallel version"
 for inputFile in ${inputFiles[@]}
 do
-par_time_sum=0
 for nw in ${allThreads[@]}
 do  
-    for ((i=0;i<totalRuns;i++))
-    do
-        runtime=$(./ff_pf_knn $nw 10 data/$inputFile -d | awk '{print $6}') 
-        par_time_sum=`expr $par_time_sum + $runtime`
+     for ((i=0;i<$totalRuns; i++)); do ./ff_pf_knn $nw 10 data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[FF Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
     done
-     echo "[FF Parallel for] , [$inputFile],[$nw threads] [$totalRuns runs] : `expr $par_time_sum / $totalRuns`"
-done
+    echo " "
 done
 
 # Running parallel version
@@ -57,14 +39,9 @@ echo "---------------Running openMP parallel version---------------"
 #echo "Running parallel version"
 for inputFile in ${inputFiles[@]}
 do
-par_time_sum=0
 for nw in ${allThreads[@]}
 do  
-    for ((i=0;i<totalRuns;i++))
-    do
-        runtime=$(./openmp_par_knn $nw 10 data/$inputFile -d | awk '{print $6}') 
-        par_time_sum=`expr $par_time_sum + $runtime`
+     for ((i=0;i<$totalRuns; i++)); do ./openMp_par_knn $nw 10 data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[openMp Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
     done
-     echo "[openMP Parallel] , [$inputFile],[$nw threads] [$totalRuns runs] : `expr $par_time_sum / $totalRuns`"
-done
+    echo " "
 done

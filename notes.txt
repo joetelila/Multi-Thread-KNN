@@ -1,3 +1,7 @@
+# Running test.
+for ((i=0;i<10; i++)); do ./stl_par_knn 2 10 data/input_10k_s100.txt -d ; done |  awk '{sum+=$6} END {print (sum/NR)/1000000}'
+
+
 # building the docker file. The '.' indicates to look the docker file in the current directory.
 # -t is for the tag of docker container.
 sudo docker build -t joet .
@@ -40,3 +44,84 @@ g++ code.cpp -lpthread
 # Includes the time spent on loading the code, start the code, end the code.
 $ time ./a.out # Gives you the time in msec, which is not good always. because we want our measure to be more accurate than msec.
 
+[y.telila@c6320p-2 Multi-Thread-KNN]$ ./executeTest.sh
+---------------Running sequential version---------------
+[STL CPP Sequential], [input_10k_s100.txt], [10 runs]: 3744877
+[STL CPP Sequential], [input_50k_s200.txt], [10 runs]: 94805036
+[STL CPP Sequential], [input_100k_s300.txt], [10 runs]: 372073573
+---------------Running STL CPP parallel version---------------
+[STL CPP Parallel] , [input_10k_s100.txt],[1 threads] [10 runs] : 3776222
+[STL CPP Parallel] , [input_10k_s100.txt],[2 threads] [10 runs] : 5769884
+[STL CPP Parallel] , [input_10k_s100.txt],[4 threads] [10 runs] : 6771237
+[STL CPP Parallel] , [input_10k_s100.txt],[8 threads] [10 runs] : 7289624
+[STL CPP Parallel] , [input_10k_s100.txt],[16 threads] [10 runs] : 7588830
+[STL CPP Parallel] , [input_10k_s100.txt],[32 threads] [10 runs] : 7815029
+[STL CPP Parallel] , [input_10k_s100.txt],[64 threads] [10 runs] : 7958853
+[STL CPP Parallel] , [input_10k_s100.txt],[128 threads] [10 runs] : 8095927
+[STL CPP Parallel] , [input_10k_s100.txt],[256 threads] [10 runs] : 8233801
+[STL CPP Parallel] , [input_50k_s200.txt],[1 threads] [10 runs] : 95822291
+[STL CPP Parallel] , [input_50k_s200.txt],[2 threads] [10 runs] : 145906655
+[STL CPP Parallel] , [input_50k_s200.txt],[4 threads] [10 runs] : 171031920
+[STL CPP Parallel] , [input_50k_s200.txt],[8 threads] [10 runs] : 183662821
+[STL CPP Parallel] , [input_50k_s200.txt],[16 threads] [10 runs] : 190175093
+[STL CPP Parallel] , [input_50k_s200.txt],[32 threads] [10 runs] : 193723379
+[STL CPP Parallel] , [input_50k_s200.txt],[64 threads] [10 runs] : 196010002
+[STL CPP Parallel] , [input_50k_s200.txt],[128 threads] [10 runs] : 197739857
+[STL CPP Parallel] , [input_50k_s200.txt],[256 threads] [10 runs] : 199259843
+[STL CPP Parallel] , [input_100k_s300.txt],[1 threads] [10 runs] : 373559613
+[STL CPP Parallel] , [input_100k_s300.txt],[2 threads] [10 runs] : 570781578
+[STL CPP Parallel] , [input_100k_s300.txt],[4 threads] [10 runs] : 669413589
+[STL CPP Parallel] , [input_100k_s300.txt],[8 threads] [10 runs] : 718979442
+[STL CPP Parallel] , [input_100k_s300.txt],[16 threads] [10 runs] : 744112360
+[STL CPP Parallel] , [input_100k_s300.txt],[32 threads] [10 runs] : 757097875
+[STL CPP Parallel] , [input_100k_s300.txt],[64 threads] [10 runs] : 765196324
+[STL CPP Parallel] , [input_100k_s300.txt],[128 threads] [10 runs] : 770888040
+[STL CPP Parallel] , [input_100k_s300.txt],[256 threads] [10 runs] : 776237635
+---------------Running FF parallel for version---------------
+[FF Parallel for] , [input_10k_s100.txt],[1 threads] [10 runs] : 3743759
+[FF Parallel for] , [input_10k_s100.txt],[2 threads] [10 runs] : 5645892
+[FF Parallel for] , [input_10k_s100.txt],[4 threads] [10 runs] : 6654671
+[FF Parallel for] , [input_10k_s100.txt],[8 threads] [10 runs] : 7166189
+[FF Parallel for] , [input_10k_s100.txt],[16 threads] [10 runs] : 7494721
+[FF Parallel for] , [input_10k_s100.txt],[32 threads] [10 runs] : 7648862
+[FF Parallel for] , [input_10k_s100.txt],[64 threads] [10 runs] : 7793584
+[FF Parallel for] , [input_10k_s100.txt],[128 threads] [10 runs] : 7942890
+[FF Parallel for] , [input_10k_s100.txt],[256 threads] [10 runs] : 8130937
+[FF Parallel for] , [input_50k_s200.txt],[1 threads] [10 runs] : 98202341
+[FF Parallel for] , [input_50k_s200.txt],[2 threads] [10 runs] : 147394212
+[FF Parallel for] , [input_50k_s200.txt],[4 threads] [10 runs] : 173105621
+[FF Parallel for] , [input_50k_s200.txt],[8 threads] [10 runs] : 186037959
+[FF Parallel for] , [input_50k_s200.txt],[16 threads] [10 runs] : 192528426
+[FF Parallel for] , [input_50k_s200.txt],[32 threads] [10 runs] : 196020961
+[FF Parallel for] , [input_50k_s200.txt],[64 threads] [10 runs] : 198341238
+[FF Parallel for] , [input_50k_s200.txt],[128 threads] [10 runs] : 200139919
+[FF Parallel for] , [input_50k_s200.txt],[256 threads] [10 runs] : 201454318
+[FF Parallel for] , [input_100k_s300.txt],[1 threads] [10 runs] : 376661565
+[FF Parallel for] , [input_100k_s300.txt],[2 threads] [10 runs] : 563950061
+[FF Parallel for] , [input_100k_s300.txt],[4 threads] [10 runs] : 665061583
+[FF Parallel for] , [input_100k_s300.txt],[8 threads] [10 runs] : 715836550
+[FF Parallel for] , [input_100k_s300.txt],[16 threads] [10 runs] : 741259864
+[FF Parallel for] , [input_100k_s300.txt],[32 threads] [10 runs] : 754119194
+[FF Parallel for] , [input_100k_s300.txt],[64 threads] [10 runs] : 761001617
+[FF Parallel for] , [input_100k_s300.txt],[128 threads] [10 runs] : 766082799
+[FF Parallel for] , [input_100k_s300.txt],[256 threads] [10 runs] : 770394690
+---------------Running openMP parallel version---------------
+[openMP Parallel] , [input_10k_s100.txt],[1 threads] [10 runs] : 3757566
+[openMP Parallel] , [input_10k_s100.txt],[2 threads] [10 runs] : 5748439
+[openMP Parallel] , [input_10k_s100.txt],[4 threads] [10 runs] : 6744950
+[openMP Parallel] , [input_10k_s100.txt],[8 threads] [10 runs] : 7247691
+[openMP Parallel] , [input_10k_s100.txt],[16 threads] [10 runs] : 7510042
+[openMP Parallel] , [input_10k_s100.txt],[32 threads] [10 runs] : 7652880
+[openMP Parallel] , [input_10k_s100.txt],[64 threads] [10 runs] : 7761247
+[openMP Parallel] , [input_10k_s100.txt],[128 threads] [10 runs] : 7898865
+[openMP Parallel] , [input_10k_s100.txt],[256 threads] [10 runs] : 8099464
+[openMP Parallel] , [input_50k_s200.txt],[1 threads] [10 runs] : 94980151
+[openMP Parallel] , [input_50k_s200.txt],[2 threads] [10 runs] : 145729235
+[openMP Parallel] , [input_50k_s200.txt],[4 threads] [10 runs] : 171183845
+[openMP Parallel] , [input_50k_s200.txt],[8 threads] [10 runs] : 183907075
+[openMP Parallel] , [input_50k_s200.txt],[16 threads] [10 runs] : 190297346
+[openMP Parallel] , [input_50k_s200.txt],[32 threads] [10 runs] : 193559411
+[openMP Parallel] , [input_50k_s200.txt],[64 threads] [10 runs] : 195674904
+[openMP Parallel] , [input_50k_s200.txt],[128 threads] [10 runs] : 197357545
+[openMP Parallel] , [input_50k_s200.txt],[256 threads] [10 runs] : 198676834
+[openMP Parallel] , [input_100k_s300.txt],[1 threads] [10 runs] : 372187615

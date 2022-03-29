@@ -76,4 +76,3 @@ string knn_par_stl(vector<point> points, interval range, int k){
   }
   return result;
 }
-

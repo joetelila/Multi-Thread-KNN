@@ -36,6 +36,7 @@ string get_knn(vector<point> points, int i, int k){
     double distance;
     for(int j = 0; j < points.size(); j++){
         if(j != i){
+            // This for loop can be vectorized. measure_euclidean_distance method call might prevent from vectorization.
             distance = measure_euclidean_distance(points[i], points[j]);
             temp_result.index = j;
             temp_result.distance = distance;
