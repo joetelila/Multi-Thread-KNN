@@ -3,12 +3,13 @@
 allThreads=(1 2 4 8 16 32 64 128 256)
 inputFiles=("input_10k_s100.txt" "input_50k_s200.txt" "input_100k_s300.txt") 
 totalRuns=6
+k = 25
 # Running sequential version
 #----------------------------------------------------------------------------------------------------------------------
 echo "---------------Running sequential version---------------"
 for inputFile in ${inputFiles[@]}
 do
-  for ((i=0;i<$totalRuns; i++)); do ./stl_seq_knn 10 data/$inputFile -d ; done |  awk '{sum+=$4} END {printf "[STL Sequence]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]";
+  for ((i=0;i<$totalRuns; i++)); do ./stl_seq_knn $k data/$inputFile -d ; done |  awk '{sum+=$4} END {printf "[STL Sequence]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]";
 done
 
 
@@ -18,7 +19,7 @@ for inputFile in ${inputFiles[@]}
 do
 for nw in ${allThreads[@]}
 do  
-     for ((i=0;i<$totalRuns; i++)); do ./stl_par_knn $nw 10 data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[STL Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
+     for ((i=0;i<$totalRuns; i++)); do ./stl_par_knn $nw $k data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[STL Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
     done
     echo " "
 done
@@ -29,7 +30,7 @@ for inputFile in ${inputFiles[@]}
 do
 for nw in ${allThreads[@]}
 do  
-     for ((i=0;i<$totalRuns; i++)); do ./ff_pf_knn $nw 10 data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[FF Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
+     for ((i=0;i<$totalRuns; i++)); do ./ff_pf_knn $nw $k data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[FF Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
     done
     echo " "
 done
@@ -41,7 +42,7 @@ for inputFile in ${inputFiles[@]}
 do
 for nw in ${allThreads[@]}
 do  
-     for ((i=0;i<$totalRuns; i++)); do ./openmp_par_knn $nw 10 data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[openMp Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
+     for ((i=0;i<$totalRuns; i++)); do ./openmp_par_knn $nw $k data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[openMp Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
     done
     echo " "
 done
