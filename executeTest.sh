@@ -41,7 +41,7 @@ for inputFile in ${inputFiles[@]}
 do
 for nw in ${allThreads[@]}
 do  
-     for ((i=0;i<$totalRuns; i++)); do ./openMp_par_knn $nw 10 data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[openMp Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
+     for ((i=0;i<$totalRuns; i++)); do ./openmp_par_knn $nw 10 data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[openMp Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
     done
     echo " "
 done

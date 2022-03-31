@@ -70,7 +70,7 @@ int main(int argc, char const *argv[]) {
                     }, 
                     nw);
     // no need to sort because of static partitioning
-}
+    }
   if (string(d)=="-d"){
       cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<ff_par_time<<"\n";
   }else{

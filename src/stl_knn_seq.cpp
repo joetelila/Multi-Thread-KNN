@@ -34,6 +34,7 @@ string get_knn(vector<point> points, int i, int k){
     kresult temp_result;
     priority_queue<kresult, vector<kresult>, cmpFunction> kneighbors;
     double distance;
+    // Would it be a good idea to parallelize this aswell?
     for(int j = 0; j < points.size(); j++){
         if(j != i){
             // This for loop can be vectorized. measure_euclidean_distance method call might prevent from vectorization.

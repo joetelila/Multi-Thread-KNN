@@ -59,13 +59,15 @@ int main(int argc, char const *argv[]) {
        }
     } // end of omp parallel num_thread
 
+      // collecting results.
+    string finalResult = "";
+    for(int i=0;i<nw;i++){
+      finalResult+= results[i];
+    }
+
   }
   
-  // print the results.
-  string finalResult = "";
-  for(int i=0;i<nw;i++){
-    finalResult+= results[i];
-  }
+  
 
   // writing the results to a file.
   // Note : if you use -d, it wont write the results to a file.
