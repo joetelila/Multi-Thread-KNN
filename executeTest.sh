@@ -1,9 +1,20 @@
 #!/bin/bash
 # Shell script to execute the test
+
+# check correct number of parameters
+if [ "$#" -ne 2 ]; then
+    echo "Usage: ./executeTest.sh [k-value, Eg. 25] [total runs, Eg. 2]"
+    exit 2
+fi
+
+k=$1
+totalRuns=$2
+
 allThreads=(1 2 4 8 16 32 64 128 256)
 inputFiles=("input_10k_s100.txt" "input_50k_s200.txt" "input_100k_s300.txt") 
-totalRuns=6
-k = 25
+
+echo "k-value: $k"
+echo "Total runs: $totalRuns"
 # Running sequential version
 #----------------------------------------------------------------------------------------------------------------------
 echo "---------------Running sequential version---------------"
