@@ -29,6 +29,7 @@ int main(int argc, char const *argv[]) {
   int  k = atoi(argv[2]); // k(neighbor) value.
   string filepath = argv[3]; // input file path.];  
   string d = ""; // output flag.0
+  string finalResult = "";
   if(argv[4] != NULL){
     d = string(argv[4]);
   }
@@ -60,7 +61,6 @@ int main(int argc, char const *argv[]) {
     } // end of omp parallel num_thread
 
       // collecting results.
-    string finalResult = "";
     for(int i=0;i<nw;i++){
       finalResult+= results[i];
     }

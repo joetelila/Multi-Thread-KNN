@@ -67,7 +67,7 @@ int main(int argc, char const *argv[]) {
          // Collecting the result this way will cause cache coherent problem. (Check how to improve this)
          // The effect could be negligible. Because the only time the threads are writing to this
          // array is when they are done computing their result but still the result could be noticable if the
-         // number of threads are large.
+         // number of threads are large.(Apparently no significant effect or no effect at all).
          results[i].result = knn_par_stl(points, range, k);
     };
 
