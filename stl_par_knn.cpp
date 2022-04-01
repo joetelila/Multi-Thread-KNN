@@ -8,6 +8,8 @@
 // include necessary libraries.
 #include <iostream>
 #include <thread>
+// mutex
+#include <mutex>
 #include "src/utimer.cpp"
 #include "src/utils.h"
 #include "src/stl_knn_seq.h"
@@ -34,6 +36,7 @@ int main(int argc, char const *argv[]) {
   int  k = atoi(argv[2]); // k(neighbor) value.
   string filepath = argv[3]; // input file path.];  
   string d = ""; // output flag.0
+  std::mutex iomutex; // for output.
   if(argv[4] != NULL){
     d = string(argv[4]);
   }
@@ -83,10 +86,13 @@ int main(int argc, char const *argv[]) {
     }
     
     // let threads start, assigning them a function and an amount of work
-    for(int i=0; i<nw; i++)
+    for(int i=0; i<nw; i++){
       threads.push_back(thread(compute_chunk, points, points_size, ranges[i], k, i));
       // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
-     
+      std::lock_guard<std::mutex> iolock(iomutex);
+      std::cout << "Thread #" << i << ": on CPU " << sched_getcpu() << "\n";
+
+    }
       // await thread termination
       //cout<<"All threads finished"<<endl;
      // join the results
