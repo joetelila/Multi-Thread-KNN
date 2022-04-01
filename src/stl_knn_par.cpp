@@ -40,6 +40,8 @@ string get_knn_par(vector<point> points, int i, int k){
     kresult temp_result;
     priority_queue<kresult, vector<kresult>, cmpFunction> kneighbors;
     double distance;
+    // This for loop is another point of bottleneck.
+    /// Discuss about this on the report.
     for(int j = 0; j < points.size(); j++){
         if(j != i){
             distance = measure_euclidean_distance(points[i], points[j]);

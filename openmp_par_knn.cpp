@@ -50,21 +50,16 @@ int main(int argc, char const *argv[]) {
   {
      utimer t_seq("openMp Parallel KNN", &openmp_time);
     
-    #pragma omp parallel num_threads(nw) shared(points, point_size, k) private(res)
-    {
-        #pragma omp for schedule(static)
-        for(int i=0;i<point_size;i++){
-        res = get_knn(points, i, k);
-        int id = omp_get_thread_num();
-        results[id] += (to_string(i)+": "+ res+"\n");
+      #pragma omp parallel for schedule(static) num_threads(nw) shared(points, point_size, k) private(res)
+      for(int i=0;i<point_size;i++){
+      res = get_knn(points, i, k);
+      int id = omp_get_thread_num();
+      results[id] += (to_string(i)+": "+ res+"\n");
        }
-    } // end of omp parallel num_thread
-
       // collecting results.
     for(int i=0;i<nw;i++){
       finalResult+= results[i];
     }
-
   }
   
   
