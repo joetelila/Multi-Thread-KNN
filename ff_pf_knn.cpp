@@ -47,6 +47,8 @@ int main(int argc, char const *argv[]) {
   long  ff_par_time; // for later speedup print
   points = read2dpoints(filepath);  
   
+  int points_len  = points.size();
+
     // FastFlow parallel execution
     {
     utimer tp("FF parallel reduce: ", &ff_par_time);
@@ -55,11 +57,11 @@ int main(int argc, char const *argv[]) {
     string identity = "";
     // no need to instantiate object since this is a one-shot, avoid overhead of creating ParallelForReduce object
     ff::parallel_reduce(ff_par_results,identity,
-                    0, points.size(),
+                    0, points_len,
                     1,
                     0, // static partitioning
                     [&](const long i,string &local_result){
-                        local_result += to_string(i)+": "+get_knn_par(points, i, k);
+                        local_result += to_string(i)+": "+get_knn_par(points, points_len, i, k);
                         local_result += "\n";
                     },
                     [](string& pf_res, const string& local_res) {

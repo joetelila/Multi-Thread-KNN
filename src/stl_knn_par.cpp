@@ -30,7 +30,7 @@ class cmpFunction{
    }
 };
 
-string get_knn_par(vector<point> points, int i, int k){
+string get_knn_par(vector<point> points, int points_len, int i, int k){
     // return k nearest neighbors of point i.
     // points : the 2d points.
     // i : the point of interest.
@@ -64,7 +64,7 @@ string get_knn_par(vector<point> points, int i, int k){
     return knn;
 }
 
-string knn_par_stl(vector<point> points, interval range, int k){
+string knn_par_stl(vector<point> points, int points_len, interval range, int k){
     // Calculate k nearest neighbors of each point sequentially.
     // points : the 2D points.
     // k : the number of neighbors.
@@ -72,7 +72,7 @@ string knn_par_stl(vector<point> points, interval range, int k){
   string result = "";
   string res;
   for(int i=range.start;i<range.end;i++){
-       res = get_knn_par(points, i, k);
+       res = get_knn_par(points, points_len, i, k);
        result+= to_string(i)+": "+ res;
        result+="\n";
   }

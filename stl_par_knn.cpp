@@ -53,6 +53,8 @@ int main(int argc, char const *argv[]) {
 
   points = read2dpoints(filepath);  
   } 
+
+  int points_size  = points.size();
   vector<thread> threads; // where the threads are going to be stored.
   vector<interval> ranges(nw); // where the ranges are going to be stored.
   int delta = points.size() / nw; // the delta for each thread.
@@ -62,13 +64,13 @@ int main(int argc, char const *argv[]) {
   // 
    res_dtype results[nw]; // the results of each thread.
   
-   auto compute_chunk = [&results](vector<point> points, interval range, int k, int i) {   // function to compute a chunk
+   auto compute_chunk = [&results](vector<point> points, int points_len, interval range, int k, int i) {   // function to compute a chunk
          // implement the result collection in different way to see if there is some improvement.
          // Collecting the result this way will cause cache coherent problem. (Check how to improve this)
          // The effect could be negligible. Because the only time the threads are writing to this
          // array is when they are done computing their result but still the result could be noticable if the
          // number of threads are large.(Apparently no significant effect or no effect at all).
-         results[i].result = knn_par_stl(points, range, k);
+         results[i].result = knn_par_stl(points, points_len, range, k);
     };
 
   long par_time;
@@ -82,7 +84,7 @@ int main(int argc, char const *argv[]) {
     
     // let threads start, assigning them a function and an amount of work
     for(int i=0; i<nw; i++)
-      threads.push_back(thread(compute_chunk, points, ranges[i], k, i));
+      threads.push_back(thread(compute_chunk, points, points_size, ranges[i], k, i));
       // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
      
       // await thread termination

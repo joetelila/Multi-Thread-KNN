@@ -12,5 +12,5 @@ struct interval{
   int end;
 };
 
-string get_knn_par(vector<point> points, int i, int k);
-string knn_par_stl(vector<point> points, interval range, int k);
+string get_knn_par(vector<point> points, int points_len, int i, int k);
+string knn_par_stl(vector<point> points, int points_len, interval range, int k);

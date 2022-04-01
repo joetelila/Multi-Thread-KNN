@@ -35,14 +35,15 @@ int main(int argc, char const *argv[]) {
   string knn_seq_results = "";      // what will store the sequential result.
 
   
-  points = read2dpoints(filepath);  
+  points = read2dpoints(filepath);
+  int points_size  = points.size();  
   
   long seq_time;
   // Computing knn in sequantial.
   {
      utimer t_seq("STL Sequential KNN", &seq_time);
     // sequential knn 
-    knn_seq_results = stl_knn_sequential(points, k);
+    knn_seq_results = stl_knn_sequential(points, points_size, k);
   }
   // writing the results to a file.
   // Note : if you use -d, it wont write the results to a file.

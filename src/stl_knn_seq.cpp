@@ -24,7 +24,7 @@ class cmpFunction{
    }
 };
 
-string get_knn(vector<point> points, int i, int k){
+string get_knn(vector<point> points, int points_size, int i, int k){
     // return k nearest neighbors of point i.
     // points : the 2d points.
     // i : the point of interest.
@@ -35,7 +35,7 @@ string get_knn(vector<point> points, int i, int k){
     priority_queue<kresult, vector<kresult>, cmpFunction> kneighbors;
     double distance;
     // Would it be a good idea to parallelize this aswell?
-    for(int j = 0; j < points.size(); j++){
+    for(int j = 0; j < points_size; j++){
         if(j != i){
             // This for loop can be vectorized. measure_euclidean_distance method call might prevent from vectorization.
             distance = measure_euclidean_distance(points[i], points[j]);
@@ -58,7 +58,7 @@ string get_knn(vector<point> points, int i, int k){
     return knn;
 }
 
-string stl_knn_sequential(vector<point> points, int k){
+string stl_knn_sequential(vector<point> points, int points_len, int k){
     // Calculate k nearest neighbors of each point sequentially.
     // points : the 2d points.
     // k : the number of neighbors.
@@ -66,7 +66,7 @@ string stl_knn_sequential(vector<point> points, int k){
   string result = "";
   string res;
   for(int i=0;i<points.size();i++){
-       res = get_knn(points, i, k);
+       res = get_knn(points, points_len, i, k);
        result+= to_string(i)+": "+ res;
        result+="\n";
   }
