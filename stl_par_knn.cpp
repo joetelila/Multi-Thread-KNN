@@ -89,8 +89,15 @@ int main(int argc, char const *argv[]) {
     for(int i=0; i<nw; i++){
       threads.push_back(thread(compute_chunk, points, points_size, ranges[i], k, i));
       // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
-      std::lock_guard<std::mutex> iolock(iomutex);
-      std::cout << "Thread #" << i << ": on CPU " << sched_getcpu() << "\n";
+      
+      cpu_set_t cpuset;
+      CPU_ZERO(&cpuset);
+      CPU_SET(i, &cpuset);
+      int rc = pthread_setaffinity_np(threads[i].native_handle(),
+                                      sizeof(cpu_set_t), &cpuset);
+      if (rc != 0) {
+        std::cerr << "Error calling pthread_setaffinity_np: " << rc << "\n";
+      }
 
     }
       // await thread termination
