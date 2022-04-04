@@ -35,7 +35,7 @@ INCLUDES	= -I $(FF_ROOT)
 CXXFLAGS  	= -g # -DNO_DEFAULT_MAPPING -DBLOCKING_MODE -DFF_BOUNDED_BUFFER
 
 LDFLAGS 	= -pthread -fopenmp
-OPTFLAGS	= -O3 -finline-functions -DNDEBUG src/utils.cpp src/stl_knn_seq.cpp src/stl_knn_par.cpp
+OPTFLAGS	= -O3 -finline-functions -DNDEBUG src/utils.cpp
 
 SOURCES         = $(wildcard *.cpp)
 TARGETS         = $(SOURCES:.cpp=)
@@ -46,11 +46,12 @@ TARGETS         = $(SOURCES:.cpp=)
 
 
 %: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTFLAGS) -o $@ $< $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OPTFLAGS) -o bin/$@ $< $(LDFLAGS)
 
 all		: $(TARGETS)
+# rm -f $(TARGETS)
 clean		: 
-	rm -f $(TARGETS)
+	rm -rf bin/*
 cleanall	: clean
 	\rm -f *.o *~
 

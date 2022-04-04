@@ -2,7 +2,7 @@
   Fast Flow -- Parallel For Reduce Implementation of KNN in C++
 */
 // Author : Yohannis Kifle Telila.
-// Date : 17/02/2022 [my BD]
+// Date : 17/02/2022
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
 //        patterns using only C++ STL.
 // include necessary libraries.
@@ -18,8 +18,6 @@ To compile:
 #include <fstream>
 #include "src/utimer.cpp"
 #include "src/utils.h"
-#include "src/stl_knn_seq.h"
-#include "src/stl_knn_par.h"
 #include <ff/ff.hpp>
 #include <ff/parallel_for.hpp>
 using namespace std;
@@ -61,7 +59,7 @@ int main(int argc, char const *argv[]) {
                     1,
                     0, // static partitioning
                     [&](const long i,string &local_result){
-                        local_result += to_string(i)+": "+get_knn_par(points, points_len, i, k);
+                        local_result += to_string(i)+": "+get_knn(points, points_len, i, k);
                         local_result += "\n";
                     },
                     [](string& pf_res, const string& local_res) {
@@ -77,11 +75,11 @@ int main(int argc, char const *argv[]) {
       cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<ff_par_time<<"\n";
   }else{
       // writing the results to a file.
-    ofstream ff_res_writer("results/ff_par_res.txt");
+    ofstream ff_res_writer("outputs/ff_par_res.txt");
     ff_res_writer << ff_par_results;
     ff_res_writer.close();
     cout<<"FF Parallel for reduce, Finished in "<<ff_par_time<<" ms.\n";
-    cout<<"Result has been written to results/ff_par_res.txt"<<endl;
+    cout<<"Result has been written to outputs/ff_par_res.txt"<<endl;
   }
 
   return 0;

@@ -2,7 +2,7 @@
   C++ openMp implementation of parallel knn.
 */
 // Author : Yohannis Kifle Telila.
-// Date : 17/02/2022 [my BD]
+// Date : 17/02/2022
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
 //        patterns using only C++ STL.
 
@@ -14,7 +14,6 @@
 #include <cstring>
 #include "src/utimer.cpp"
 #include "src/utils.h"
-#include "src/stl_knn_seq.h"
 
 using namespace std;
 
@@ -62,18 +61,16 @@ int main(int argc, char const *argv[]) {
     }
   }
   
-  
-
   // writing the results to a file.
   // Note : if you use -d, it wont write the results to a file.
   if (string(d)=="-d"){   
       cout<<"[nw]: "<<nw<<" [k]: "<<k<<" [time]: "<<openmp_time<<"\n";
   }else{
-      ofstream openMp_res_writer("results/openMp_par_res.txt");
+      ofstream openMp_res_writer("outputs/openMp_par_res.txt");
       openMp_res_writer << finalResult;
       openMp_res_writer.close();
       cout<<"openMp Par, Finished in "<<openmp_time<<" ms.\n";
-      cout<<"Result has been written to results/openMp_par_res.txt"<<endl;
+      cout<<"Result has been written to outputs/openMp_par_res.txt"<<endl;
   }
   
   return 0;

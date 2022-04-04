@@ -2,7 +2,7 @@
   C++ STL implementation of sequential knn.
 */
 // Author : Yohannis Kifle Telila.
-// Date : 17/02/2022 [my BD]
+// Date : 17/02/2022
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
 //        patterns using only C++ STL.
 
@@ -13,7 +13,6 @@
 #include <cstring>
 #include "src/utimer.cpp"
 #include "src/utils.h"
-#include "src/stl_knn_seq.h"
 using namespace std;
 
 
@@ -42,21 +41,26 @@ int main(int argc, char const *argv[]) {
   // Computing knn in sequantial.
   {
      utimer t_seq("STL Sequential KNN", &seq_time);
-    // sequential knn 
-    knn_seq_results = stl_knn_sequential(points, points_size, k);
+    // sequential knn
+    string res;
+    for(int i=0;i<points.size();i++){
+       res = get_knn(points, points.size(), i, k);
+       knn_seq_results+= to_string(i)+": "+ res;
+       knn_seq_results+="\n";
+    }
+
   }
   // writing the results to a file.
   // Note : if you use -d, it wont write the results to a file.
   if (string(d)=="-d"){
       cout<<"[k]: "<<k<<"  [time]: "<<seq_time<<"\n";
   }else{
-      ofstream stl_res_writer("results/stl_seq_res.txt");
+      ofstream stl_res_writer("outputs/stl_seq_res.txt");
       stl_res_writer << knn_seq_results;
       stl_res_writer.close();
       cout<<"STL Seq, Finished in "<<seq_time<<" ms.\n";
-      cout<<"Result has been written to results/stl_seq_res.txt"<<endl;
+      cout<<"Result has been written to outputs/stl_seq_res.txt"<<endl;
   }
-  
   return 0;
 }
 

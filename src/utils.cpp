@@ -9,19 +9,9 @@
 #include <sstream>
 #include<vector>
 #include<fstream>
+#include <queue>
+#include "utils.h"
 using namespace std;
-
-struct point{
-  double x;
-  double y;
-};
-
-struct range{
-    // a struct for storing the range of points.
-  int start;
-  int end;
-};
-
 
 /*
 bool checkfor_error(){
@@ -81,4 +71,40 @@ float measure_euclidean_distance_without_square_root(point p1, point p2){
   //  p1 : the first point.
   //  p2 : the second point.
   return pow((p1.x - p2.x), 2) + pow((p1.y - p2.y), 2);
+}
+
+string get_knn(vector<point> points, int points_size, int i, int k){
+    // return k nearest neighbors of point i.
+    // points : the 2d points.
+    // i : the point of interest.
+    // k : the number of neighbors.
+    // return : a string of k nearest neighbors.
+    string knn;
+    kresult temp_result;
+    priority_queue<kresult, vector<kresult>, cmpFunction> kneighbors;
+    double distance;
+    // Would it be a good idea to parallelize this aswell?
+    for(int j = 0; j < points_size; j++){
+        if(j != i){
+            // This for loop can be vectorized. measure_euclidean_distance method call might prevent from vectorization.
+            distance = measure_euclidean_distance(points[i], points[j]);
+            temp_result.index = j;
+            temp_result.distance = distance;
+            if (kneighbors.size() < k){
+                kneighbors.push(temp_result);
+            }
+            if (kneighbors.top().distance > temp_result.distance) {
+                kneighbors.pop();
+                kneighbors.push(temp_result);
+            }
+        }
+    }
+    // prepare the result.
+    while (!kneighbors.empty() ) {
+        knn = to_string(kneighbors.top().index) +" "+ knn  + " ";
+        kneighbors.pop();
+    }
+
+
+    return knn;
 }

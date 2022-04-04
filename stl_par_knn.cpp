@@ -2,7 +2,7 @@
   STL C++ implementation of parallel KNN
 */
 // Author : Yohannis Kifle Telila.
-// Date : 17/02/2022 [my BD]
+// Date : 17/02/2022
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
 //        patterns using only C++ STL.
 // include necessary libraries.
@@ -12,17 +12,8 @@
 #include <mutex>
 #include "src/utimer.cpp"
 #include "src/utils.h"
-#include "src/stl_knn_seq.h"
-#include "src/stl_knn_par.h"
+
 using namespace std;
-
-struct res_dtype{
-    // This data type is created to avoid the overhead of
-    // false sharing. [ :cat /proc/cpuinfo / cache alignment size : 64 bytes]
-  string result;
-  string dummy = "dummy";
-};
-
 
 int main(int argc, char const *argv[]) {
 
@@ -58,8 +49,8 @@ int main(int argc, char const *argv[]) {
   } 
 
   int points_size  = points.size();
-  vector<thread> threads; // where the threads are going to be stored.
-  vector<interval> ranges(nw); // where the ranges are going to be stored.
+  vector<thread> threads;         // where the threads are going to be stored.
+  vector<interval> ranges(nw);    // where the ranges are going to be stored.
   int delta = points.size() / nw; // the delta for each thread.
   
   // This result array is accessed by all the threads but each entry is only accessed(write to it) by one thread.
@@ -73,9 +64,16 @@ int main(int argc, char const *argv[]) {
          // The effect could be negligible. Because the only time the threads are writing to this
          // array is when they are done computing their result but still the result could be noticable if the
          // number of threads are large.(Apparently no significant effect or no effect at all).
-         results[i].result = knn_par_stl(points, points_len, range, k);
+        string result = "";
+        string res;
+        for(int i=range.start;i<range.end;i++){
+            res = get_knn(points, points_len, i, k);
+            result+= to_string(i)+": "+ res;
+            result+="\n";
+        }
+        results[i].result = result;
     };
-
+  
   long par_time;
    {
       utimer t_seq("STL Parallel KNN: ", &par_time);
@@ -90,6 +88,10 @@ int main(int argc, char const *argv[]) {
       threads.push_back(thread(compute_chunk, points, points_size, ranges[i], k, i));
       // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
       
+      // Note: For report. (check if pinning the threads to the cores makes an improvement.)
+      // During execution of threads, threads may be moved from one
+      // core to another. Which also cause data movement from core to another
+      // core and overall it will add additional overhead.
       cpu_set_t cpuset;
       CPU_ZERO(&cpuset);
       CPU_SET(i, &cpuset);
@@ -119,14 +121,12 @@ int main(int argc, char const *argv[]) {
       cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<par_time<<"\n";
   }else{
       // writing the results to a file.
-    ofstream stl_par_writer("results/stl_par_res.txt");
+    ofstream stl_par_writer("outputs/stl_par_res.txt");
     stl_par_writer << knn_par_results;
     stl_par_writer.close();
     cout<<"STL par, Finished in "<<par_time<<" ms.\n";
-    cout<<"Result has been written to results/stl_par_res.txt"<<endl;
+    cout<<"Result has been written to outputs/stl_par_res.txt"<<endl;
   }
-
-
 
   return 0;
 }
