@@ -54,12 +54,13 @@ int main(int argc, char const *argv[]) {
     // identity for reduce variable
     string identity = "";
     // no need to instantiate object since this is a one-shot, avoid overhead of creating ParallelForReduce object
+    // no need to instantiate object since this is a one-shot, avoid overhead of creating ParallelForReduce object
     ff::parallel_reduce(ff_par_results,identity,
-                    0, points_len,
+                    0, points.size(),
                     1,
                     0, // static partitioning
                     [&](const long i,string &local_result){
-                        local_result += to_string(i)+": "+get_knn(points, points_len, i, k);
+                        local_result += to_string(i)+": "+get_knn(points, i, k);
                         local_result += "\n";
                     },
                     [](string& pf_res, const string& local_res) {
@@ -71,6 +72,9 @@ int main(int argc, char const *argv[]) {
                     nw);
     // no need to sort because of static partitioning
     }
+
+
+
   if (string(d)=="-d"){
       cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<ff_par_time<<"\n";
   }else{
