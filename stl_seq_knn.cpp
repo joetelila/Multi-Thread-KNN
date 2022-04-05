@@ -31,8 +31,7 @@ int main(int argc, char const *argv[]) {
   
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
-  string knn_seq_results = "";      // what will store the sequential result.
-
+  vector<knn_result> knn_seq_result;      // what will store the sequential result.
   
   points = read2dpoints(filepath);
   int points_size  = points.size();  
@@ -42,25 +41,19 @@ int main(int argc, char const *argv[]) {
   {
      utimer t_seq("STL Sequential KNN", &seq_time);
     // sequential knn
-    string res;
+    vector<int> res;
     for(int i=0;i<points.size();i++){
-       res = get_knn(points, points.size(), i, k);
-       knn_seq_results+= to_string(i)+": "+ res;
-       knn_seq_results+="\n";
-    }
+       knn_result res;res.index = i;
+       res.knn_index = get_knn(points, points.size(), i, k);
+       knn_seq_result.push_back(res);      
+     }
 
   }
-  // writing the results to a file.
-  // Note : if you use -d, it wont write the results to a file.
-  if (string(d)=="-d"){
-      cout<<"[k]: "<<k<<"  [time]: "<<seq_time<<"\n";
-  }else{
-      ofstream stl_res_writer("outputs/stl_seq_res.txt");
-      stl_res_writer << knn_seq_results;
-      stl_res_writer.close();
-      cout<<"STL Seq, Finished in "<<seq_time<<" ms.\n";
-      cout<<"Result has been written to outputs/stl_seq_res.txt"<<endl;
-  }
+
+  // printing the result.
+  print_knn_result(knn_seq_result,k,seq_time, argv[0], d);  
+
+  
   return 0;
 }
 

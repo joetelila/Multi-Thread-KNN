@@ -41,6 +41,13 @@ struct kresult{
   float distance;
 };
 
+struct knn_result{
+    // a struct for storing the final KNN result.
+    int index; // index reference of the point.
+    // List of index of neerest neighbor point.
+    vector<int> knn_index;
+};
+
 class cmpFunction{
     // compare function for priority queue.
  public:
@@ -51,6 +58,9 @@ class cmpFunction{
 };
 
 
+bool compare_point_index(knn_result p1, knn_result p2);
+
+
 vector<string> stringSplitter(string s);
 
 vector<point> read2dpoints(string filename);
@@ -59,4 +69,6 @@ float measure_euclidean_distance(point p1, point p2);
 
 float measure_euclidean_distance_without_square_root(point p1, point p2);
 
-string get_knn(vector<point> points, int points_size, int i, int k);
+vector<int> get_knn(vector<point> points, int points_size, int i, int k);
+
+void print_knn_result(vector<knn_result> knn_result,int k, long time, string file, string d);

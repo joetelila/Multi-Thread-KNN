@@ -29,6 +29,11 @@ vector<string> stringSplitter(string s){
   return res;
 }
 
+bool compare_point_index(knn_result p1, knn_result p2)
+{
+    return (p1.index < p2.index);
+}
+
 
 vector<point> read2dpoints(string filepath){
   // Reads 2D points from a file.
@@ -73,14 +78,14 @@ float measure_euclidean_distance_without_square_root(point p1, point p2){
   return pow((p1.x - p2.x), 2) + pow((p1.y - p2.y), 2);
 }
 
-string get_knn(vector<point> points, int points_size, int i, int k){
+vector<int> get_knn(vector<point> points, int points_size, int i, int k){
     // return k nearest neighbors of point i.
     // points : the 2d points.
     // i : the point of interest.
     // k : the number of neighbors.
     // return : a string of k nearest neighbors.
-    string knn;
-    kresult temp_result;
+    vector<int> knn_res;
+    kresult temp_res;
     priority_queue<kresult, vector<kresult>, cmpFunction> kneighbors;
     double distance;
     // Would it be a good idea to parallelize this aswell?
@@ -88,23 +93,55 @@ string get_knn(vector<point> points, int points_size, int i, int k){
         if(j != i){
             // This for loop can be vectorized. measure_euclidean_distance method call might prevent from vectorization.
             distance = measure_euclidean_distance(points[i], points[j]);
-            temp_result.index = j;
-            temp_result.distance = distance;
+            temp_res.index = j;
+            temp_res.distance = distance;
             if (kneighbors.size() < k){
-                kneighbors.push(temp_result);
+                kneighbors.push(temp_res);
             }
-            if (kneighbors.top().distance > temp_result.distance) {
+            if (kneighbors.top().distance > temp_res.distance) {
                 kneighbors.pop();
-                kneighbors.push(temp_result);
+                kneighbors.push(temp_res);
             }
         }
     }
     // prepare the result.
     while (!kneighbors.empty() ) {
-        knn = to_string(kneighbors.top().index) +" "+ knn  + " ";
+        knn_res.push_back(kneighbors.top().index);
+        //knn = to_string(kneighbors.top().index) +" "+ knn  + " ";
         kneighbors.pop();
     }
 
 
-    return knn;
+    return knn_res;
+}
+
+
+void print_knn_result(vector<knn_result> knn_results, int k,long time, string file, string d){
+    // print the final KNN result.
+    // knn_results : the final KNN result.
+   
+    // print output for debugging. 
+    if (string(d)=="-d"){
+      cout<<"[k]: "<<k<<"  [time]: "<<time<<"\n";
+      return;
+    }
+
+    // print output for submission.
+    string knn_res = "";
+    for(int i = 0; i < knn_results.size(); i++){
+        string temp = "";
+        for(int j=0; j<knn_results[i].knn_index.size(); j++){
+            temp = to_string(knn_results[i].knn_index[j]) +" "+ temp + " ";
+        }
+        knn_res = knn_res + to_string(knn_results[i].index)+ ": " + temp + "\n";
+      }
+     
+      ofstream stl_res_writer("outputs/"+file.substr(6)+".txt");
+      stl_res_writer << knn_res;
+      stl_res_writer.close();
+      cout<<file.substr(6)+ ", finished in "<<time<<" ms.\n";
+      cout<<"Result has been written to outputs/"+file.substr(6)+".txt"<<endl;
+  
+  return;
+
 }

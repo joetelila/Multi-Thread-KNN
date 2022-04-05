@@ -10,6 +10,7 @@
 #include <thread>
 // mutex
 #include <mutex>
+#include <bits/stdc++.h> // vector sort
 #include "src/utimer.cpp"
 #include "src/utils.h"
 
@@ -56,22 +57,30 @@ int main(int argc, char const *argv[]) {
   // This result array is accessed by all the threads but each entry is only accessed(write to it) by one thread.
   // So, its like owner writes / computes access pattern. (discussed in state access pattern on lecture 25)
   // 
-   res_dtype results[nw]; // the results of each thread.
+
+  // res_dtype results[nw]; // the results of each thread.
+  vector<knn_result> knn_par_result;
   
-   auto compute_chunk = [&results](vector<point> points, int points_len, interval range, int k, int i) {   // function to compute a chunk
+  
+  auto compute_chunk = [&knn_par_result](vector<point> points, int points_len, interval range, int k, int i) {   // function to compute a chunk
          // implement the result collection in different way to see if there is some improvement.
          // Collecting the result this way will cause cache coherent problem. (Check how to improve this)
          // The effect could be negligible. Because the only time the threads are writing to this
          // array is when they are done computing their result but still the result could be noticable if the
          // number of threads are large.(Apparently no significant effect or no effect at all).
         string result = "";
-        string res;
+        vector<knn_result> knn_par_res_chunk;
+
         for(int i=range.start;i<range.end;i++){
-            res = get_knn(points, points_len, i, k);
-            result+= to_string(i)+": "+ res;
-            result+="\n";
+            knn_result res;res.index = i; 
+            res.knn_index = get_knn(points, points_len, i, k);
+            knn_par_res_chunk.push_back(res);
+            //result+= to_string(i)+": "+ res;
+            //result+="\n";
         }
-        results[i].result = result;
+        // Merging with the global result.
+        knn_par_result.insert(knn_par_result.end(), knn_par_res_chunk.begin(), knn_par_res_chunk.end());
+        //results[i].result = result;
     };
   
   long par_time;
@@ -102,31 +111,18 @@ int main(int argc, char const *argv[]) {
       }
 
     }
-      // await thread termination
-      //cout<<"All threads finished"<<endl;
-     // join the results
+    //cout<<"All threads finished"<<endl;
+    // join the results
     for(thread& t: threads) {                       
       t.join(); // wait for thread to finish
      }
-
-     // collecting results
-    for(int i=0; i<nw; i++){
-      knn_par_results += results[i].result;
+     
+     // sort the results.
+     sort(knn_par_result.begin(), knn_par_result.end(), compare_point_index);
     }
-   }
-  
 
-  // output the results.
-  if (string(d)=="-d"){
-      cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<par_time<<"\n";
-  }else{
-      // writing the results to a file.
-    ofstream stl_par_writer("outputs/stl_par_res.txt");
-    stl_par_writer << knn_par_results;
-    stl_par_writer.close();
-    cout<<"STL par, Finished in "<<par_time<<" ms.\n";
-    cout<<"Result has been written to outputs/stl_par_res.txt"<<endl;
-  }
+    // printing the result.
+    print_knn_result(knn_par_result,k,par_time, argv[0], d);
 
   return 0;
 }
