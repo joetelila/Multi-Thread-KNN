@@ -62,7 +62,7 @@ int main(int argc, char const *argv[]) {
   vector<knn_result> knn_par_result;
   
   
-  auto compute_chunk = [&knn_par_result](vector<point> points, int points_len, interval range, int k, int i) {   // function to compute a chunk
+  auto compute_chunk = [&knn_par_result](vector<point> points, int points_len, interval range, mutex *mu, int k, int i) {   // function to compute a chunk
          // implement the result collection in different way to see if there is some improvement.
          // Collecting the result this way will cause cache coherent problem. (Check how to improve this)
          // The effect could be negligible. Because the only time the threads are writing to this
@@ -79,7 +79,9 @@ int main(int argc, char const *argv[]) {
             //result+="\n";
         }
         // Merging with the global result.
+        mu->lock();
         knn_par_result.insert(knn_par_result.end(), knn_par_res_chunk.begin(), knn_par_res_chunk.end());
+        mu->unlock();
         //results[i].result = result;
     };
   
@@ -94,7 +96,7 @@ int main(int argc, char const *argv[]) {
     
     // let threads start, assigning them a function and an amount of work
     for(int i=0; i<nw; i++){
-      threads.push_back(thread(compute_chunk, points, points_size, ranges[i], k, i));
+      threads.push_back(thread(compute_chunk, points, points_size, ranges[i], &iomutex, k, i));
       // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
       
       // Note: For report. (check if pinning the threads to the cores makes an improvement.)
@@ -122,7 +124,7 @@ int main(int argc, char const *argv[]) {
     }
 
     // printing the result.
-    print_knn_result(knn_par_result,k,par_time, argv[0], d);
+    print_knn_result(knn_par_result,k,par_time,nw, argv[0], d);
 
   return 0;
 }

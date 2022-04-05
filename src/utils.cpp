@@ -116,13 +116,18 @@ vector<int> get_knn(vector<point> points, int points_size, int i, int k){
 }
 
 
-void print_knn_result(vector<knn_result> knn_results, int k,long time, string file, string d){
+void print_knn_result(vector<knn_result> knn_results, int k,long time, int nw, string file, string d){
     // print the final KNN result.
     // knn_results : the final KNN result.
    
     // print output for debugging. 
     if (string(d)=="-d"){
-      cout<<"[k]: "<<k<<"  [time]: "<<time<<"\n";
+      
+      if(file!="stl_seq_knn"){
+        cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<time<<"\n";
+        return;
+      }
+      cout<<"[k]: "<<k<<"  [time]: "<<time<<" \n";
       return;
     }
 
