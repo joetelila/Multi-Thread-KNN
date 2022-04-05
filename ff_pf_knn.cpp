@@ -60,7 +60,7 @@ int main(int argc, char const *argv[]) {
                     1,
                     0, // static partitioning
                     [&](const long i,string &local_result){
-                        local_result += to_string(i)+": "+get_knn(points, i, k);
+                        local_result += to_string(i)+": "+get_knn(points, points_len, i, k);
                         local_result += "\n";
                     },
                     [](string& pf_res, const string& local_res) {
