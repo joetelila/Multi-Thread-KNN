@@ -89,11 +89,6 @@ int main(int argc, char const *argv[]) {
         ranges[i].end = (i != (nw-1) ? (i+1)*delta : points.size()); // end of the range.
     }
     
-    // let threads start, assigning them a function and an amount of work
-    threads.push_back(thread(compute_chunk, points, points_size, ranges[i], &iomutex, k, i));
-    
-    
-         
    for(int i=0; i<nw; i++){
       // Note: For report. (check if pinning the threads to the cores makes an improvement.)
       // During execution of threads, threads may be moved from one
