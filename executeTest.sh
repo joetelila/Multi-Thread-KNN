@@ -20,7 +20,7 @@ echo "Total runs: $totalRuns"
 echo "---------------Running sequential version---------------"
 for inputFile in ${inputFiles[@]}
 do
-  for ((i=0;i<$totalRuns; i++)); do ./bin/stl_seq_knn $k data/$inputFile -d ; done |  awk '{sum+=$4} END {printf "[STL Sequence]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]";
+  for ((i=0;i<$totalRuns; i++)); do ./bin/stl_seq_knn $k data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[STL Sequence]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]";
 done
 
 

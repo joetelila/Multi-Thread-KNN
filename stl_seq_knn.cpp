@@ -52,7 +52,6 @@ int main(int argc, char const *argv[]) {
 
   // printing the result.
   print_knn_result(knn_seq_result,k,seq_time,1, argv[0], d); // 1 is nw. 
-
   
   return 0;
 }

@@ -122,13 +122,8 @@ void print_knn_result(vector<knn_result> knn_results, int k,long time, int nw, s
    
     // print output for debugging. 
     if (string(d)=="-d"){
-      
-      if(file!="stl_seq_knn"){
-        cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<time<<"\n";
-        return;
-      }
-      cout<<"[k]: "<<k<<"  [time]: "<<time<<" \n";
-      return;
+       cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<time<<"\n";
+     return;
     }
 
     // print output for submission.
