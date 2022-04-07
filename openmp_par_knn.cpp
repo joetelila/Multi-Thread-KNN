@@ -10,6 +10,7 @@
 // include necessary libraries.
 #include <iostream>
 #include <omp.h>
+#include <bits/stdc++.h> // vector sort
 #include <mutex>
 #include <cstring>
 #include "src/utimer.cpp"
@@ -40,39 +41,35 @@ int main(int argc, char const *argv[]) {
   
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
-  vector<string> results(nw);    // what will store the result.
+  vector<knn_result> omp_par_result;    // what will store the result.
   points = read2dpoints(filepath);  
   int points_len  = points.size();
-  string res = "";
+  vector<knn_result> par_chunk_result;
   long openmp_time;
   // Computing knn in sequantial.
   {
      utimer t_seq("openMp Parallel KNN", &openmp_time);
     
-      #pragma omp parallel for schedule(static) num_threads(nw) shared(points, results, points_len, k) private(res)
-      for(int i=0;i<points_len;i++){
-          res = get_knn(points, points_len, i, k);
-          int id = omp_get_thread_num();
-          // optimize this.
-          results[id] += (to_string(i)+": "+ res+"\n");
-       }
-      // collecting results.
-    for(int i=0;i<nw;i++){
-      finalResult+= results[i];
+      #pragma omp parallel num_threads(nw) shared(points, omp_par_result, points_len, k) private(par_chunk_result)
+      {
+        #pragma omp for schedule(static)
+        for(int i=0;i<points_len;i++){
+          knn_result res;res.index = i; 
+          res.knn_index = get_knn(points, points_len, i, k);
+          par_chunk_result.push_back(res);
+        }
+        #pragma omp critical // Mutual exclusion: Only one thread at a time can enter a criticalregion.
+        omp_par_result.insert(omp_par_result.end(), par_chunk_result.begin(), par_chunk_result.end());
+      }
+
+      // sorting the result.
+      sort(omp_par_result.begin(), omp_par_result.end(), compare_point_index);
     }
-  }
   
-  // writing the results to a file.
-  // Note : if you use -d, it wont write the results to a file.
-  if (string(d)=="-d"){   
-      cout<<"[nw]: "<<nw<<" [k]: "<<k<<" [time]: "<<openmp_time<<"\n";
-  }else{
-      ofstream openMp_res_writer("outputs/openMp_par_res.txt");
-      openMp_res_writer << finalResult;
-      openMp_res_writer.close();
-      cout<<"openMp Par, Finished in "<<openmp_time<<" ms.\n";
-      cout<<"Result has been written to outputs/openMp_par_res.txt"<<endl;
-  }
+  
+  // printing results.
+  print_knn_result(omp_par_result,k,openmp_time,nw,argv[0],d);
+    
   
   return 0;
 }

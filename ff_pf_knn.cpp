@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
 
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
-  string ff_par_results = "";      // what will store the parallel result.
+  vector<knn_result> ff_par_results;      // what will store the parallel result.
 
   long  ff_par_time; // for later speedup print
   points = read2dpoints(filepath);  
@@ -52,40 +52,31 @@ int main(int argc, char const *argv[]) {
     utimer tp("FF parallel reduce: ", &ff_par_time);
 
     // identity for reduce variable
-    string identity = "";
-    // no need to instantiate object since this is a one-shot, avoid overhead of creating ParallelForReduce object
+   vector<knn_result> identity;
     // no need to instantiate object since this is a one-shot, avoid overhead of creating ParallelForReduce object
     ff::parallel_reduce(ff_par_results,identity,
-                    0, points.size(),
+                    0, points_len,
                     1,
                     0, // static partitioning
-                    [&](const long i,string &local_result){
-                        local_result += to_string(i)+": "+get_knn(points, points_len, i, k);
-                        local_result += "\n";
+                    [&](const long i,vector<knn_result> &local_result){
+                        knn_result res;res.index = i; 
+                        res.knn_index = get_knn(points, points_len, i, k); 
+                        local_result.push_back(res);
+                        
                     },
-                    [](string& pf_res, const string& local_res) {
+                    [](vector<knn_result>& pf_res, const vector<knn_result>& local_res) {
                         // This is the reduction operator.
                         // It is called for each thread, and it receives the partial result
                         // and the identity value.
-                        pf_res+=local_res;
+                       pf_res.insert(pf_res.end(), local_res.begin(), local_res.end());
                     }, 
                     nw);
-    // no need to sort because of static partitioning
+        // no need to sort because of static partitioning
     }
-
-
-
-  if (string(d)=="-d"){
-      cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<ff_par_time<<"\n";
-  }else{
-      // writing the results to a file.
-    ofstream ff_res_writer("outputs/ff_par_res.txt");
-    ff_res_writer << ff_par_results;
-    ff_res_writer.close();
-    cout<<"FF Parallel for reduce, Finished in "<<ff_par_time<<" ms.\n";
-    cout<<"Result has been written to outputs/ff_par_res.txt"<<endl;
-  }
-
+    
+    // print results.
+    print_knn_result(ff_par_results,k,ff_par_time,nw,argv[0],d);
+   
   return 0;
 }
 
