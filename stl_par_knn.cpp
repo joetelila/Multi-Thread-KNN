@@ -57,6 +57,8 @@ int main(int argc, char const *argv[]) {
   // This result array is accessed by all the threads but each entry is only accessed(write to it) by one thread.
   // So, its like owner writes / computes access pattern. (discussed in state access pattern on lecture 25)
   // 
+  long par_time;
+   {utimer t_seq("STL Parallel KNN: ", &par_time);
 
   // res_dtype results[nw]; // the results of each thread.
   vector<knn_result> knn_par_result;
@@ -68,26 +70,19 @@ int main(int argc, char const *argv[]) {
          // The effect could be negligible. Because the only time the threads are writing to this
          // array is when they are done computing their result but still the result could be noticable if the
          // number of threads are large.(Apparently no significant effect or no effect at all).
-        string result = "";
-        vector<knn_result> knn_par_res_chunk;
-
+        vector<knn_result> par_res_chunk;
         for(int i=range.start;i<range.end;i++){
             knn_result res;res.index = i; 
             res.knn_index = get_knn(points, points_len, i, k);
-            knn_par_res_chunk.push_back(res);
-            //result+= to_string(i)+": "+ res;
-            //result+="\n";
+            par_res_chunk.push_back(res);
         }
         // Merging with the global result.
         mu->lock();
-        knn_par_result.insert(knn_par_result.end(), knn_par_res_chunk.begin(), knn_par_res_chunk.end());
+        knn_par_result.insert(knn_par_result.end(), par_res_chunk.begin(), par_res_chunk.end());
         mu->unlock();
-        //results[i].result = result;
     };
   
-  long par_time;
-   {
-      utimer t_seq("STL Parallel KNN: ", &par_time);
+  
     // split the points into nw ranges.
     for(int i=0; i<nw; i++){
         ranges[i].start = i*delta; // start of the range.
@@ -95,24 +90,18 @@ int main(int argc, char const *argv[]) {
     }
     
     // let threads start, assigning them a function and an amount of work
-    for(int i=0; i<nw; i++){
-      threads.push_back(thread(compute_chunk, points, points_size, ranges[i], &iomutex, k, i));
-      // cout<<"Thread "<<i<<": Range: "<<ranges[i].start<<" "<<ranges[i].end<<endl;
-      
+    threads.push_back(thread(compute_chunk, points, points_size, ranges[i], &iomutex, k, i));
+    
+    
+         
+   for(int i=0; i<nw; i++){
       // Note: For report. (check if pinning the threads to the cores makes an improvement.)
       // During execution of threads, threads may be moved from one
       // core to another. Which also cause data movement from core to another
       // core and overall it will add additional overhead.
-      cpu_set_t cpuset;
-      CPU_ZERO(&cpuset);
-      CPU_SET(i, &cpuset);
-      int rc = pthread_setaffinity_np(threads[i].native_handle(),
-                                      sizeof(cpu_set_t), &cpuset);
-      if (rc != 0) {
-        std::cerr << "Error calling pthread_setaffinity_np: " << rc << "\n";
-      }
-
-    }
+      threads.push_back(thread(compute_chunk, points, points_size, ranges[i], &iomutex, k, i));
+      
+    } 
     //cout<<"All threads finished"<<endl;
     // join the results
     for(thread& t: threads) {                       

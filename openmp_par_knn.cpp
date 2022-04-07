@@ -49,7 +49,7 @@ int main(int argc, char const *argv[]) {
   // Computing knn in sequantial.
   {
      utimer t_seq("openMp Parallel KNN", &openmp_time);
-    
+      // Ref : Intro to openMP_Mattson - page 76.
       #pragma omp parallel num_threads(nw) shared(points, omp_par_result, points_len, k) private(par_chunk_result)
       {
         #pragma omp for schedule(static)
