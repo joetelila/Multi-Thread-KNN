@@ -58,7 +58,7 @@ int main(int argc, char const *argv[]) {
           res.knn_index = get_knn(points, points_len, i, k);
           par_chunk_result.push_back(res);
         }
-        // Remove this lock.
+      
         #pragma omp critical // Mutual exclusion: Only one thread at a time can enter a criticalregion.
         omp_par_result.insert(omp_par_result.end(), par_chunk_result.begin(), par_chunk_result.end());
       }

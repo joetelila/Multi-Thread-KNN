@@ -78,9 +78,9 @@ int main(int argc, char const *argv[]) {
         }
         // Merging with the global result.
        
-      //   mu->lock(); I will be removing this lock.
+        mu->lock(); I will be removing this lock.
         knn_par_result.insert(knn_par_result.end(), par_res_chunk.begin(), par_res_chunk.end());
-      //   mu->unlock();
+        mu->unlock();
     };
   
   
