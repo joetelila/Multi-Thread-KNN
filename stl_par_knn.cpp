@@ -27,7 +27,6 @@ int main(int argc, char const *argv[]) {
   int  k = atoi(argv[2]); // k(neighbor) value.
   string filepath = argv[3]; // input file path.];  
   string d = ""; // output flag.0
-  std::mutex iomutex; // for output.
   if(argv[4] != NULL){
     d = string(argv[4]);
   }
@@ -78,9 +77,6 @@ int main(int argc, char const *argv[]) {
         
         // Merging with the global result.
         *knn_par_res = par_res_chunk;
-        //mu->lock(); I will be removing this lock.
-       // knn_par_result.insert(knn_par_result.end(), par_res_chunk.begin(), par_res_chunk.end());
-       // mu->unlock();
     };
   
   
