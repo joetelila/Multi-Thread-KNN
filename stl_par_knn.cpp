@@ -93,6 +93,15 @@ int main(int argc, char const *argv[]) {
       // core and overall it will add additional overhead.
       threads.push_back(thread(compute_chunk, points, points_size, ranges[i], &knn_par_result[i], k, i));
       
+      cpu_set_t cpuset;
+      CPU_ZERO(&cpuset);
+      CPU_SET(i, &cpuset);
+      int rc = pthread_setaffinity_np(threads[i].native_handle(),
+                                      sizeof(cpu_set_t), &cpuset);
+      if (rc != 0) {
+        std::cerr << "Error calling pthread_setaffinity_np: " << rc << "\n";
+      }
+
     } 
     //cout<<"All threads finished"<<endl;
     // join the results
