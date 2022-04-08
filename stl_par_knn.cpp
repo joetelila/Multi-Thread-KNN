@@ -54,15 +54,12 @@ int main(int argc, char const *argv[]) {
   vector<interval> ranges(nw);    // where the ranges are going to be stored.
   int delta = points.size() / nw; // the delta for each thread.
   
-  // This result array is accessed by all the threads but each entry is only accessed(write to it) by one thread.
-  // So, its like owner writes / computes access pattern. (discussed in state access pattern on lecture 25)
-  // 
-  long par_time;
-   {utimer t_seq("STL Parallel KNN: ", &par_time);
-
   // res_dtype results[nw]; // the results of each thread.
   vector<knn_result> knn_par_result;
   
+  long par_time;
+   {utimer t_seq("STL Parallel KNN: ", &par_time);
+
   
   auto compute_chunk = [&knn_par_result](vector<point> points, int points_len, interval range, mutex *mu, int k, int i) {   // function to compute a chunk
          // implement the result collection in different way to see if there is some improvement.
