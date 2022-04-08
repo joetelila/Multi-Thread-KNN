@@ -145,3 +145,38 @@ void print_knn_result(vector<knn_result> knn_results, int k,long time, int nw, s
   return;
 
 }
+
+void print_knn_result(vector<knn_result> knn_results[], int k,long time, int nw, string file, string d){
+    // print the final KNN result.
+    // knn_results : the final KNN result.
+   
+    // print output for debugging. 
+    if (string(d)=="-d"){
+       cout<<"[nw]: "<<nw<<"  [k]: "<<k<<"  [time]: "<<time<<"\n";
+     return;
+    }
+
+    // print output for submission.
+    string knn_res = "";
+
+    for(int k=0; k<nw; k++){
+
+      for(int i = 0; i < knn_results[k].size(); i++){
+        string temp = "";
+        for(int j=0; j<knn_results[k][i].knn_index.size(); j++){
+            temp = to_string(knn_results[k][i].knn_index[j]) +" "+ temp + " ";
+        }
+        knn_res = knn_res + to_string(knn_results[k][i].index)+ ": " + temp + "\n";
+      }
+      
+    }
+     
+      ofstream stl_res_writer("outputs/"+file.substr(6)+".txt");
+      stl_res_writer << knn_res;
+      stl_res_writer.close();
+      cout<<file.substr(6)+ ", finished in "<<time<<" ms.\n";
+      cout<<"Result has been written to outputs/"+file.substr(6)+".txt"<<endl;
+  
+  return;
+
+}

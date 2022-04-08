@@ -10,7 +10,6 @@
 // include necessary libraries.
 #include <iostream>
 #include <omp.h>
-#include <bits/stdc++.h> // vector sort
 #include <mutex>
 #include <cstring>
 #include "src/utimer.cpp"
@@ -41,7 +40,7 @@ int main(int argc, char const *argv[]) {
   
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored
-  vector<knn_result> omp_par_result;    // what will store the result.
+  vector<knn_result> omp_par_result[nw];    // what will store the result.
   points = read2dpoints(filepath);  
   int points_len  = points.size();
   vector<knn_result> par_chunk_result;
@@ -52,26 +51,19 @@ int main(int argc, char const *argv[]) {
       // Ref : Intro to openMP_Mattson - page 76.
       #pragma omp parallel num_threads(nw) shared(points, omp_par_result, points_len, k) private(par_chunk_result)
       {
+        int tid = omp_get_thread_num();
+        vector<knn_result> *res = &omp_par_result[tid];
         #pragma omp for schedule(static)
         for(int i=0;i<points_len;i++){
           knn_result res;res.index = i; 
           res.knn_index = get_knn(points, points_len, i, k);
           par_chunk_result.push_back(res);
         }
-        // Remove this lock.
-        #pragma omp critical // Mutual exclusion: Only one thread at a time can enter a criticalregion.
-        omp_par_result.insert(omp_par_result.end(), par_chunk_result.begin(), par_chunk_result.end());
-      }
-
-      // sorting the result.
-      sort(omp_par_result.begin(), omp_par_result.end(), compare_point_index);
+         *res = par_chunk_result;
+       }
     }
-  
-  
   // printing results.
   print_knn_result(omp_par_result,k,openmp_time,nw,argv[0],d);
-    
-  
   return 0;
 }
 

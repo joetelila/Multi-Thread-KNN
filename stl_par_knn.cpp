@@ -10,7 +10,6 @@
 #include <thread>
 // mutex
 #include <mutex>
-#include <bits/stdc++.h> // vector sort
 #include "src/utimer.cpp"
 #include "src/utils.h"
 
@@ -56,15 +55,15 @@ int main(int argc, char const *argv[]) {
   
   // This result array is accessed by all the threads but each entry is only accessed(write to it) by one thread.
   // So, its like owner writes / computes access pattern. (discussed in state access pattern on lecture 25)
-  // 
+  
+  // res_dtype results[nw]; // the results of each thread.
+  vector<knn_result> knn_par_result[nw]; // the results of each thread.
+  
   long par_time;
    {utimer t_seq("STL Parallel KNN: ", &par_time);
 
-  // res_dtype results[nw]; // the results of each thread.
-  vector<knn_result> knn_par_result;
   
-  
-  auto compute_chunk = [&knn_par_result](vector<point> points, int points_len, interval range, mutex *mu, int k, int i) {   // function to compute a chunk
+  auto compute_chunk = [](vector<point> points, int points_len, interval range,  vector<knn_result> *knn_par_res, int k, int i) {   // function to compute a chunk
          // implement the result collection in different way to see if there is some improvement.
          // Collecting the result this way will cause cache coherent problem. (Check how to improve this)
          // The effect could be negligible. Because the only time the threads are writing to this
@@ -76,11 +75,12 @@ int main(int argc, char const *argv[]) {
             res.knn_index = get_knn(points, points_len, i, k);
             par_res_chunk.push_back(res);
         }
+        
         // Merging with the global result.
-       
-      //   mu->lock(); I will be removing this lock.
-        knn_par_result.insert(knn_par_result.end(), par_res_chunk.begin(), par_res_chunk.end());
-      //   mu->unlock();
+        *knn_par_res = par_res_chunk;
+        //mu->lock(); I will be removing this lock.
+       // knn_par_result.insert(knn_par_result.end(), par_res_chunk.begin(), par_res_chunk.end());
+       // mu->unlock();
     };
   
   
@@ -95,7 +95,7 @@ int main(int argc, char const *argv[]) {
       // During execution of threads, threads may be moved from one
       // core to another. Which also cause data movement from core to another
       // core and overall it will add additional overhead.
-      threads.push_back(thread(compute_chunk, points, points_size, ranges[i], &iomutex, k, i));
+      threads.push_back(thread(compute_chunk, points, points_size, ranges[i], &knn_par_result[i], k, i));
       
     } 
     //cout<<"All threads finished"<<endl;
@@ -103,12 +103,8 @@ int main(int argc, char const *argv[]) {
     for(thread& t: threads) {                       
       t.join(); // wait for thread to finish
      }
-     
-     // sort the results.
-     sort(knn_par_result.begin(), knn_par_result.end(), compare_point_index);
     }
 
-    // printing the result.
     print_knn_result(knn_par_result,k,par_time,nw, argv[0], d);
 
   return 0;
