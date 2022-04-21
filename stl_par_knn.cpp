@@ -3,8 +3,8 @@
 */
 // Author : Yohannis Kifle Telila.
 // Date : 17/02/2022
-// Desc : This file contain code for calculating KNN of a 2D points using sequantial
-//        patterns using only C++ STL.
+// Desc : This file contain code for calculating KNN of a 2D points using threads to parallelize the computation, only C++ STL.
+
 // include necessary libraries.
 #include <iostream>
 #include <thread>

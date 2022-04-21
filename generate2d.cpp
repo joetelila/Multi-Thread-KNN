@@ -1,6 +1,6 @@
 // Author: Yohannis Kifle Telila.
 // Date : 28/03/2022
-// Desc : This file contains utility codes used by other files.
+// Desc : This file contains utility codes to generate 2D points.
  
 // include necessary libraries.
 #include <string>

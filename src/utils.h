@@ -72,3 +72,4 @@ float measure_euclidean_distance_without_square_root(point p1, point p2);
 vector<int> get_knn(vector<point> points, int points_size, int i, int k);
 
 void print_knn_result(vector<knn_result> knn_result,int k, long time,  int nw, string file, string d);
+void print_knn_result(vector<knn_result> knn_result[],int k, long time,  int nw, string file, string d);

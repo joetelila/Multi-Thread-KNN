@@ -24,15 +24,15 @@ int main(int argc, char const *argv[]) {
 
   int  k = atoi(argv[1]); // k value.
   string filepath = argv[2]; // input file path.];
-  string d = "";
+  string d = "";   // parameter for outputing only nw and running time.
   if(argv[3] != NULL){
     d = string(argv[3]);
   }
   
-  // where the points are going to be stored [the one read from]
-  vector<point> points; // where 2d points are stored
+  vector<point> points;// where the points are going to be stored [the one read from]
   vector<knn_result> knn_seq_result;      // what will store the sequential result.
   
+  // Reading the file and storing the points in the vector.
   points = read2dpoints(filepath);
   int points_size  = points.size();  
   
@@ -49,7 +49,6 @@ int main(int argc, char const *argv[]) {
      }
 
   }
-
   // printing the result.
   print_knn_result(knn_seq_result,k,seq_time,1, argv[0], d); // 1 is nw. 
   

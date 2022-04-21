@@ -4,7 +4,8 @@
 // Author : Yohannis Kifle Telila.
 // Date : 17/02/2022
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
-//        patterns using only C++ STL.
+//        patterns using only C++ STL.[This is improved version of ff_pf_knn.cpp where threads were pinned to cores.]
+
 // include necessary libraries.
 #include <iostream>
 #include <thread>
@@ -59,7 +60,8 @@ int main(int argc, char const *argv[]) {
   vector<knn_result> knn_par_result[nw]; // the results of each thread.
   
   long par_time;
-   {utimer t_seq("STL Parallel KNN: ", &par_time);
+   {
+     utimer t_seq("STL Parallel KNN: ", &par_time);
 
   
   auto compute_chunk = [](vector<point> points, int points_len, interval range,  vector<knn_result> *knn_par_res, int k, int i) {   // function to compute a chunk

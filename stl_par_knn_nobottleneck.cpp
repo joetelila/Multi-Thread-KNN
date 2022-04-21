@@ -4,7 +4,7 @@
 // Author : Yohannis Kifle Telila.
 // Date : 17/02/2022
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
-//        patterns using only C++ STL.
+//        patterns using only C++ STL. [This is improved version of ff_pf_knn.cpp where bottleneck is removed.]
 // include necessary libraries.
 #include <iostream>
 #include <thread>
