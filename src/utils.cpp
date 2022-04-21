@@ -104,12 +104,13 @@ vector<int> get_knn(vector<point> points, int points_size, int i, int k){
             }
         }
     }
-    // prepare the result.
-    while (!kneighbors.empty() ) {
+    // prepare the result. change to forloop so that it can be parallelized.
+    // converted a while loop implementation to a for loop.(for vectorization**)
+    for(int j = 0; j < k; j++){
         knn_res.push_back(kneighbors.top().index);
-        //knn = to_string(kneighbors.top().index) +" "+ knn  + " ";
         kneighbors.pop();
     }
+    
 
 
     return knn_res;
