@@ -83,15 +83,15 @@ vector<int> get_knn(vector<point> points, int points_size, int i, int k){
     // points : the 2d points.
     // i : the point of interest.
     // k : the number of neighbors.
-    // return : a string of k nearest neighbors.
+    // return : a vector of k nearest neighbors.
     vector<int> knn_res;
     kresult temp_res;
     priority_queue<kresult, vector<kresult>, cmpFunction> kneighbors;
     double distance;
-    // Would it be a good idea to parallelize this aswell?
-    for(int j = 0; j < points_size; j++){
+  
+     for(int j = 0; j < points_size; j++){
         if(j != i){
-            // This for loop can be vectorized. measure_euclidean_distance method call might prevent from vectorization.
+            // This for loop can be vectorized.
             distance = measure_euclidean_distance(points[i], points[j]);
             temp_res.index = j;
             temp_res.distance = distance;
@@ -104,14 +104,13 @@ vector<int> get_knn(vector<point> points, int points_size, int i, int k){
             }
         }
     }
-    // prepare the result.
-    while (!kneighbors.empty() ) {
+    // prepare the result. change to forloop so that it can be parallelized.
+    // converted a while loop implementation to a for loop.(for vectorization**)
+    for(int j = 0; j < k; j++){
         knn_res.push_back(kneighbors.top().index);
-        //knn = to_string(kneighbors.top().index) +" "+ knn  + " ";
         kneighbors.pop();
     }
-
-
+    
     return knn_res;
 }
 
