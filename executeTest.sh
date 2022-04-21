@@ -65,18 +65,6 @@ for inputFile in ${inputFiles[@]}
 do
 for nw in ${allThreads[@]}
 do  
-     for ((i=0;i<$totalRuns; i++)); do ./bin/stl_par_knn_nobottleneck $nw $k data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[openMp Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
-    done
-    echo " "
-done
-
-# Running parallel version
-echo "---------------Running openMP NoBottleneck version---------------"
-#echo "Running parallel version"
-for inputFile in ${inputFiles[@]}
-do
-for nw in ${allThreads[@]}
-do  
      for ((i=0;i<$totalRuns; i++)); do ./bin/openmp_par_knn_nobottleneck $nw $k data/$inputFile -d ; done |  awk '{sum+=$6} END {printf "[openMp Par]: [ "(sum/NR)/1000000 " sec"}'; echo "]  ["$inputFile"]" "[ "$nw" ]";
     done
     echo " "
