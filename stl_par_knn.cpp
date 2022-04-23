@@ -40,16 +40,16 @@ int main(int argc, char const *argv[]) {
   // where the points are going to be stored [the one read from]
   vector<point> points; // where 2d points are stored after reading from file.
   string knn_par_results = "";      // what will store the parallel result.
-  
+  int points_size;
   // Read the file and store the points in the vector.
   long read_ftime;
   {
    utimer t_seq("File read took: ", &read_ftime);
 
-  points = read2dpoints(filepath);  
+   points = read2dpoints(filepath);  
   } 
 
-  int points_size  = points.size();
+  points_size  = points.size();
   vector<thread> threads;         // where the threads are going to be stored.
   vector<interval> ranges(nw);    // where the ranges are going to be stored.
   int delta = points.size() / nw; // the delta for each thread.
@@ -58,7 +58,8 @@ int main(int argc, char const *argv[]) {
   vector<knn_result> knn_par_result;
   
   long par_time;
-   {utimer t_seq("STL Parallel KNN: ", &par_time);
+   {
+     utimer t_seq("STL Parallel KNN: ", &par_time);
 
   
   auto compute_chunk = [&knn_par_result](vector<point> points, int points_len, interval range, mutex *mu, int k, int i) {   // function to compute a chunk
@@ -106,7 +107,12 @@ int main(int argc, char const *argv[]) {
     }
 
     // printing the result.
-    print_knn_result(knn_par_result,k,par_time,nw, argv[0], d);
-
+    long write_ftime;
+    {
+      utimer t_seq("File write took: ", &write_ftime);
+      // write the result to file.
+      print_knn_result(knn_par_result,k,par_time,nw, argv[0], d);
+    }
+    
   return 0;
 }

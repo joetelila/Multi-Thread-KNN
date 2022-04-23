@@ -111,8 +111,13 @@ int main(int argc, char const *argv[]) {
       t.join(); // wait for thread to finish
      }
     }
+    long write_ftime;
+    {
+      utimer t_seq("File write took: ", &write_ftime);
+      // write the result to file.
+      print_knn_result(knn_par_result,k,par_time,nw, argv[0], d);
+    }
 
-    print_knn_result(knn_par_result,k,par_time,nw, argv[0], d);
 
   return 0;
 }

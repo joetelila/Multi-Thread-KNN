@@ -28,13 +28,16 @@ int main(int argc, char const *argv[]) {
   if(argv[3] != NULL){
     d = string(argv[3]);
   }
-  
-  vector<point> points;// where the points are going to be stored [the one read from]
   vector<knn_result> knn_seq_result;      // what will store the sequential result.
-  
-  // Reading the file and storing the points in the vector.
-  points = read2dpoints(filepath);
-  int points_size  = points.size();  
+  vector<point> points;// where the points are going to be stored [the one read from]
+  int points_size;
+  long seq_read;
+  {
+    utimer t_seq("File read", &seq_read);
+    // Reading the file and storing the points in the vector.
+    points = read2dpoints(filepath);
+    points_size  = points.size();  
+  } 
   
   long seq_time;
   // Computing knn in sequantial.
@@ -50,8 +53,13 @@ int main(int argc, char const *argv[]) {
 
   }
   // printing the result.
-  print_knn_result(knn_seq_result,k,seq_time,1, argv[0], d); // 1 is nw. 
-  
+   long write_ftime;
+    {
+      utimer t_seq("File write took: ", &write_ftime);
+      // write the result to file.
+      print_knn_result(knn_seq_result,k,seq_time,1, argv[0], d); // 1 is nw. 
+    }
+
   return 0;
 }
 

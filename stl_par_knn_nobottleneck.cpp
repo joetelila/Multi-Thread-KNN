@@ -101,7 +101,13 @@ int main(int argc, char const *argv[]) {
      }
     }
 
-    print_knn_result(knn_par_result,k,par_time,nw, argv[0], d);
+    long write_ftime;
+    {
+      utimer t_seq("File write took: ", &write_ftime);
+      // write the result to file.
+      print_knn_result(knn_par_result,k,par_time,nw, argv[0], d);
+    }
 
+    
   return 0;
 }

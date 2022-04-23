@@ -63,8 +63,13 @@ int main(int argc, char const *argv[]) {
          *res = par_chunk_result;
        }
     }
-  // printing results.
-  print_knn_result(omp_par_result,k,openmp_time,nw,argv[0],d);
+    long write_ftime;
+    {
+      utimer t_seq("File write took: ", &write_ftime);
+      // write the result to file.
+      print_knn_result(omp_par_result,k,openmp_time,nw,argv[0],d);
+    }
+  
   return 0;
 }
 
