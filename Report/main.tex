@@ -323,10 +323,10 @@ In the file attached along with this report, all implementation files and necess
 \begin{itemize}
   \item \verb|\bin| folder contains all the executable files.
   \item \verb|\data| folder contains the three data-set used for testing the different implementations.
-  \item \verb|\fastflow| is where the FastFlow library is cloned.
   \item \verb|\outputs| folder contains the output of each algorithms or implementations. Each line contain a point id and list of space separated $k$ points closest to the point.
   \item \verb|\src| folder contains utimer class for measure running time of the algorithms and utility functions and data structures used in the program.
-  \item \verb|\Test-result| folder contains test result data and visualization of the plots.
+   \item \verb|\report| contains this report pdf and latex content.
+   \item \verb|\test-result| is where the test result log and plot visualizations stored.
 \end{itemize}
 
 To build the project issue the \verb|make all| or just \verb|make| command from inside the folder \verb|\Multi-Thread-KNN|. This command will generate the executables inside \verb|bin| folder. Running each executable with no parameter will provide the correct parameters and their orders. Each executable have \verb|-d| optional flag which basically ignores writing the result to the file.\\
