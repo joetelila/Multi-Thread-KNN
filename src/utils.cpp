@@ -138,7 +138,7 @@ void print_knn_result(vector<knn_result> knn_results, int k,long time, int nw, s
       ofstream stl_res_writer("outputs/"+file.substr(6)+".txt");
       stl_res_writer << knn_res;
       stl_res_writer.close();
-      cout<<file.substr(6)+ ", finished in "<<time<<" ms.\n";
+      cout<<file.substr(6)+ ", finished in "<<time<<" µs.\n";
       cout<<"Result has been written to outputs/"+file.substr(6)+".txt"<<endl;
   
   return;
@@ -173,7 +173,7 @@ void print_knn_result(vector<knn_result> knn_results[], int k,long time, int nw,
       ofstream stl_res_writer("outputs/"+file.substr(6)+".txt");
       stl_res_writer << knn_res;
       stl_res_writer.close();
-      cout<<file.substr(6)+ ", finished in "<<time<<" ms.\n";
+      cout<<file.substr(6)+ ", finished in "<<time<<" µs.\n";
       cout<<"Result has been written to outputs/"+file.substr(6)+".txt"<<endl;
   
   return;

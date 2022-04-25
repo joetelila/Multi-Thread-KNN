@@ -335,14 +335,14 @@ To run a single script, the following issue can be issued from inside the projec
 
 \begin{minted}{bash}
 #!/bin/bash
-$ ./bin/stl_seq_knn 50 data/input_50k_s456.txt -d           #optional -d
+$ ./bin/stl_seq_knn 50 data/input_50k_s456.txt        #optional -d 
 \end{minted}
 
 For the other implementations, there is \verb|nw|, number of workers important parameter. In the following command \verb|nw| is provided as 256. 
 
 \begin{minted}{bash}
 #!/bin/bash
-$ ./bin/stl_par_knn 256 50 data/input_50k_s456.txt -d      #optional -d
+$ ./bin/stl_par_knn 256 50 data/input_50k_s456.txt   #optional -d
 \end{minted}
 
 Additionally, one bash script called \verb|executeTest.sh| is provided to aid the testing of the implementations. The parameter for this script are \verb|k-value| and \verb|runs|. Running time of each algorithm will be averaged over the number of \verb|runs|.
