@@ -10,8 +10,8 @@ fi
 k=$1
 totalRuns=$2
 
-allThreads=(1 2 4) #8 16 32 64 128 256)
-inputFiles=("input_20k_s123.txt") #"input_50k_s456.txt" "input_100k_s789.txt") 
+allThreads=(1 2 4 8 16 32 64 128 256)
+inputFiles=("input_20k_s123.txt" "input_50k_s456.txt" "input_100k_s789.txt") 
 
 echo "k-value: $k"
 echo "Total runs: $totalRuns"
