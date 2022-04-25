@@ -46,25 +46,29 @@ int main(int argc, char const *argv[]) {
 
     // identity for reduce variable
    vector<knn_result> identity;
-    // no need to instantiate object since this is a one-shot, avoid overhead of creating ParallelForReduce object
+    // The parameters for parallel_for_reduce are:
+    // ff_par_results - is where the final result will be stored.
+    // identity - is the identity for the reduce operation, which is a vector of knn_result.
+    // 0 - is the starting index of the loop.
+    // points_len - is the ending index of the loop.
+    // 1 - is the step size of the loop.
+    // 0 - for static partitioning.
+    // Lambda for computing KNN followed by Lambda for computing the reduction.
     ff::parallel_reduce(ff_par_results,identity,
-                    0, points_len,
+                    0, points_len, 
                     1,
-                    0, // static partitioning
+                    0,
                     [&](const long i,vector<knn_result> &local_result){
                         knn_result res;res.index = i; 
                         res.knn_index = get_knn(points, points_len, i, k); 
                         local_result.push_back(res);
-                        
-                    },
+                     },
                     [](vector<knn_result>& pf_res, const vector<knn_result>& local_res) {
                         // This is the reduction operator.
                         // It is called for each thread, and it receives the partial result
-                        // and the identity value.
                        pf_res.insert(pf_res.end(), local_res.begin(), local_res.end());
                     }, 
                     nw);
-        // no need to sort because of static partitioning
     }
     
     // print results.
