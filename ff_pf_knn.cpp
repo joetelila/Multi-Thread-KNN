@@ -6,6 +6,7 @@
 // Desc : This file contain code for calculating KNN of a 2D points using sequantial
 //        patterns using FF library.
 // include necessary libraries.
+
 #include <iostream>
 #include <thread>
 #include <fstream>
@@ -54,6 +55,7 @@ int main(int argc, char const *argv[]) {
     // 1 - is the step size of the loop.
     // 0 - for static partitioning.
     // Lambda for computing KNN followed by Lambda for computing the reduction.
+    // & - we can access all the enviroment variables inside the lambda.
     ff::parallel_reduce(ff_par_results,identity,
                     0, points_len, 
                     1,
